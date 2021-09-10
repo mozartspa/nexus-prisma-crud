@@ -1,4 +1,5 @@
 import { plugin } from "nexus"
+import { generatedTypes } from "../runtime"
 
 export type NexusPrismaCrudPluginOptions = {}
 
@@ -8,7 +9,7 @@ export const nexusPrismaCrudPlugin = (
   return plugin({
     name: "NexusPrismaCrud",
     onMissingType: (typeName) => {
-      console.log("TYPENAME MISSING", typeName)
+      return generatedTypes[typeName]
     },
   })
 }

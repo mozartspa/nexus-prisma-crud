@@ -49,9 +49,7 @@ export function generateFilters(
                 writer.writeLine(`t.id('lte')`)
                 writer.writeLine(`t.id('gt')`)
                 writer.writeLine(`t.id('gte')`)
-                writer.writeLine(
-                  `t.field('not', { type: 'IDFilterInputType' })`
-                )
+                writer.writeLine(`t.field('not', { type: 'IDFilterInput' })`)
               })
             })
             .write(")")
@@ -87,7 +85,7 @@ export function generateFilters(
                 writer.writeLine(`t.string('gt')`)
                 writer.writeLine(`t.string('gte')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'StringFilterInputType' })`
+                  `t.field('not', { type: 'StringFilterInput' })`
                 )
               })
             })
@@ -120,9 +118,7 @@ export function generateFilters(
                 writer.writeLine(`t.int('lte')`)
                 writer.writeLine(`t.int('gt')`)
                 writer.writeLine(`t.int('gte')`)
-                writer.writeLine(
-                  `t.field('not', { type: 'IntFilterInputType' })`
-                )
+                writer.writeLine(`t.field('not', { type: 'IntFilterInput' })`)
               })
             })
             .write(")")
@@ -154,9 +150,7 @@ export function generateFilters(
                 writer.writeLine(`t.float('lte')`)
                 writer.writeLine(`t.float('gt')`)
                 writer.writeLine(`t.float('gte')`)
-                writer.writeLine(
-                  `t.field('not', { type: 'FloatFilterInputType' })`
-                )
+                writer.writeLine(`t.field('not', { type: 'FloatFilterInput' })`)
               })
             })
             .write(")")
@@ -183,7 +177,7 @@ export function generateFilters(
               writer.block(() => {
                 writer.writeLine(`t.boolean('equals')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'BooleanFilterInputType' })`
+                  `t.field('not', { type: 'BooleanFilterInput' })`
                 )
               })
             })
@@ -217,7 +211,7 @@ export function generateFilters(
                 writer.writeLine(`t.field('gt', { type: 'DateTime' })`)
                 writer.writeLine(`t.field('gte', { type: 'DateTime' })`)
                 writer.writeLine(
-                  `t.field('not', { type: 'DateTimeFilterInputType' })`
+                  `t.field('not', { type: 'DateTimeFilterInput' })`
                 )
               })
             })

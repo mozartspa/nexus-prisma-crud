@@ -5,4 +5,6 @@
  *
  */
 
-export const PleaseRunPrismaGenerate = "Please run prisma generate"
+import { GeneratedTypes } from "../generator/types"
+
+export const generatedTypes: GeneratedTypes = {}

@@ -3,12 +3,10 @@ import { Project, StructureKind } from "ts-morph"
 import { SemicolonPreference } from "typescript"
 import { generateFilters } from "./filters"
 import { generateGeneratedTypes } from "./generatedTypes"
+import { generateModel } from "./model"
 import { GeneratorContext } from "./types"
 
-export async function generateAndEmit(
-  _dmmf: DMMF.Document,
-  outputPath: string
-) {
+export async function generateAndEmit(dmmf: DMMF.Document, outputPath: string) {
   const project = new Project({
     skipAddingFilesFromTsConfig: true,
     compilerOptions: {
@@ -16,10 +14,9 @@ export async function generateAndEmit(
     },
   })
 
-  //const enums = dmmf.datamodel.enums
-  //const models = dmmf.datamodel.models
-
   const context = createGeneratorContext()
+  //const enums = dmmf.datamodel.enums
+  const models = dmmf.datamodel.models
 
   const sourceFile = project.createSourceFile(
     `${outputPath}/index.ts`,
@@ -27,8 +24,13 @@ export async function generateAndEmit(
       statements: [
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: ["enumType", "inputObjectType"],
+          namedImports: ["enumType", "inputObjectType", "list"],
           moduleSpecifier: "nexus",
+        },
+        {
+          kind: StructureKind.ImportDeclaration,
+          namedImports: ["buildInputTypeFromFields"],
+          moduleSpecifier: "../generator/runtime",
         },
       ],
     },
@@ -38,6 +40,9 @@ export async function generateAndEmit(
   )
 
   generateFilters(sourceFile, context)
+  models.forEach((model) => generateModel(sourceFile, model, context))
+
+  // This must be the last generated thing
   generateGeneratedTypes(sourceFile, context.getTypes())
 
   sourceFile.formatText({
