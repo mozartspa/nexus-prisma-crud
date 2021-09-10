@@ -1,0 +1,14 @@
+// ignore a wide range of support files
+.*
+
+# include eslint
+!.eslintrc.js
+
+# yarn
+yarn.lock
+yarn-error.logs
+
+# other
+dist
+LICENSE
+coverage
