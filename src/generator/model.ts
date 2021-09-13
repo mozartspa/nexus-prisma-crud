@@ -46,7 +46,7 @@ function generateWhere(
                 writer.inlineBlock(() => {
                   writer.writeLine(`name: '${field.name}',`)
                   if (field.kind === "scalar") {
-                    if (field.name === "id" || field.name.endsWith("Id")) {
+                    if (field.isId && field.type === "String") {
                       writer.writeLine(`type: 'IDFilterInput',`)
                     } else {
                       writer.writeLine(`type: '${field.type}FilterInput',`)
