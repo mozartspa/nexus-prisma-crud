@@ -17,13 +17,18 @@ export function generateModel(
   generateWhere(sourceFile, model, context)
 }
 
-export function generateWhere(
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.substring(1)
+}
+
+function generateWhere(
   sourceFile: SourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
   const whereDefName = `${model.name}Where`
   const whereInputTypeName = `${model.name}WhereInput`
+  const whereInputBuilderName = `build${capitalize(whereInputTypeName)}`
 
   // Fields definition
   sourceFile.addVariableStatement({
@@ -73,6 +78,20 @@ export function generateWhere(
               writer.write(",").newLine()
             })
             .newLine()
+        },
+      },
+    ],
+  })
+
+  // Input type builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: whereInputBuilderName,
+        initializer(writer) {
+          writer.writeLine(`createInputTypeBuilder(${whereDefName})`)
         },
       },
     ],

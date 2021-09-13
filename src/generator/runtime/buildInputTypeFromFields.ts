@@ -1,8 +1,5 @@
 import { inputObjectType } from "nexus"
-
-type FieldsObject = {
-  [index: string]: { name: string; type?: any } | string
-}
+import { FieldsObject } from "./types"
 
 export function buildInputTypeFromFields(fieldsObject: FieldsObject) {
   const { $name, ...fields } = fieldsObject

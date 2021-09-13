@@ -29,7 +29,7 @@ export async function generateAndEmit(dmmf: DMMF.Document, outputPath: string) {
         },
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: ["buildInputTypeFromFields"],
+          namedImports: ["buildInputTypeFromFields", "createInputTypeBuilder"],
           moduleSpecifier: "../generator/runtime",
         },
       ],
