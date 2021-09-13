@@ -1,5 +1,6 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { capitalize, lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
 
 export function generateModel(
@@ -16,10 +17,7 @@ export function generateModel(
 
   generateWhere(sourceFile, model, context)
   generateOrderBy(sourceFile, model, context)
-}
-
-function capitalize(value: string) {
-  return value.charAt(0).toUpperCase() + value.substring(1)
+  generateQuery(sourceFile, model, context)
 }
 
 function generateWhere(
@@ -175,6 +173,28 @@ function generateOrderBy(
         name: `${orderInputTypeName}Type`,
         initializer(writer) {
           writer.writeLine(`buildInputTypeFromFields(${orderDefName})`)
+        },
+      },
+    ],
+  })
+}
+
+function generateQuery(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  _context: GeneratorContext
+) {
+  const builderName = `${lowerFirst(model.name)}Query`
+
+  // Query builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${builderName}`,
+        initializer(writer) {
+          writer.writeLine(`createQueryBuilder('${model.name}')`)
         },
       },
     ],
