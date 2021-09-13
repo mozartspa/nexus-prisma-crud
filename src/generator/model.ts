@@ -15,6 +15,7 @@ export function generateModel(
   //const modelListRelationFilterName = `${model.name}ListRelationFilterInput`
 
   generateWhere(sourceFile, model, context)
+  generateOrderBy(sourceFile, model, context)
 }
 
 function capitalize(value: string) {
@@ -107,6 +108,73 @@ function generateWhere(
         name: `${whereInputTypeName}Type`,
         initializer(writer) {
           writer.writeLine(`buildInputTypeFromFields(${whereDefName})`)
+        },
+      },
+    ],
+  })
+}
+
+function generateOrderBy(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  context: GeneratorContext
+) {
+  const orderDefName = `${model.name}OrderBy`
+  const orderInputTypeName = `${model.name}OrderByInput`
+  const orderInputBuilderName = `build${capitalize(orderInputTypeName)}`
+
+  // Fields definition
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${orderDefName}`,
+        initializer(writer) {
+          writer
+            .inlineBlock(() => {
+              writer.writeLine(`$name: '${orderInputTypeName}',`)
+              model.fields.forEach((field) => {
+                writer.write(`${field.name}:`)
+                writer.inlineBlock(() => {
+                  writer.writeLine(`name: '${field.name}',`)
+                  if (field.kind === "scalar") {
+                    writer.writeLine(`type: 'SortDir',`)
+                  }
+                })
+                writer.write(",").newLine()
+              })
+            })
+            .newLine()
+        },
+      },
+    ],
+  })
+
+  // Input type builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: orderInputBuilderName,
+        initializer(writer) {
+          writer.writeLine(`createInputTypeBuilder(${orderDefName})`)
+        },
+      },
+    ],
+  })
+
+  // Input Type
+  context.addType(orderInputTypeName, `${orderInputTypeName}Type`)
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${orderInputTypeName}Type`,
+        initializer(writer) {
+          writer.writeLine(`buildInputTypeFromFields(${orderDefName})`)
         },
       },
     ],
