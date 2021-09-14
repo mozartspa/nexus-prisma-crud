@@ -1,7 +1,44 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
-import { capitalize, lowerFirst } from "./runtime/helpers"
+import { lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
+
+function getNameMappings(model: DMMF.Model) {
+  return {
+    where: {
+      inputDefinition: `${model.name}Where`,
+      inputType: `${model.name}WhereInput`,
+      inputBuilder: `build${model.name}WhereInput`,
+    },
+    orderBy: {
+      inputDefinition: `${model.name}OrderBy`,
+      inputType: `${model.name}OrderByInput`,
+      inputBuilder: `build${model.name}OrderByInput`,
+    },
+    queryOne: {
+      builder: `${lowerFirst(model.name)}QueryOne`,
+    },
+    queryList: {
+      outputType: `${model.name}List`,
+      builder: `${lowerFirst(model.name)}QueryList`,
+      operationName: `${lowerFirst(model.name)}List`,
+    },
+    mutationCreate: {
+      inputDefinition: `${model.name}Create`,
+      inputType: `${model.name}CreateInput`,
+      inputBuilder: `build${model.name}CreateInput`,
+      builder: `${lowerFirst(model.name)}MutationCreateOne`,
+      operationName: `${lowerFirst(model.name)}Create`,
+    },
+    mutationUpdate: {
+      inputDefinition: `${model.name}Update`,
+      inputType: `${model.name}UpdateInput`,
+      inputBuilder: `build${model.name}UpdateInput`,
+      builder: `${lowerFirst(model.name)}MutationUpdateOne`,
+      operationName: `${lowerFirst(model.name)}Update`,
+    },
+  }
+}
 
 export function generateModel(
   sourceFile: SourceFile,
@@ -21,6 +58,7 @@ export function generateModel(
   generateListQuery(sourceFile, model, context)
   generateCreate(sourceFile, model, context)
   generateUpdate(sourceFile, model, context)
+  generateExport(sourceFile, model, context)
 }
 
 function generateWhere(
@@ -28,21 +66,20 @@ function generateWhere(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  const whereDefName = `${model.name}Where`
-  const whereInputTypeName = `${model.name}WhereInput`
-  const whereInputBuilderName = `build${capitalize(whereInputTypeName)}`
+  const { inputDefinition, inputType, inputBuilder } =
+    getNameMappings(model).where
 
   // Fields definition
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${whereDefName}`,
+        name: `${inputDefinition}`,
         initializer(writer) {
           writer
             .inlineBlock(() => {
-              writer.writeLine(`$name: '${whereInputTypeName}',`)
+              writer.writeLine(`$name: '${inputType}',`)
               model.fields.forEach((field) => {
                 writer.write(`${field.name}:`)
                 writer.inlineBlock(() => {
@@ -63,21 +100,21 @@ function generateWhere(
               writer.write(`AND:`)
               writer.inlineBlock(() => {
                 writer.writeLine(`name: 'AND',`)
-                writer.writeLine(`type: list('${whereInputTypeName}'),`)
+                writer.writeLine(`type: list('${inputType}'),`)
               })
               writer.write(",").newLine()
 
               writer.write(`OR:`)
               writer.inlineBlock(() => {
                 writer.writeLine(`name: 'OR',`)
-                writer.writeLine(`type: list('${whereInputTypeName}'),`)
+                writer.writeLine(`type: list('${inputType}'),`)
               })
               writer.write(",").newLine()
 
               writer.write(`NOT:`)
               writer.inlineBlock(() => {
                 writer.writeLine(`name: 'NOT',`)
-                writer.writeLine(`type: list('${whereInputTypeName}'),`)
+                writer.writeLine(`type: list('${inputType}'),`)
               })
               writer.write(",").newLine()
             })
@@ -90,27 +127,27 @@ function generateWhere(
   // Input type builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: whereInputBuilderName,
+        name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${whereDefName})`)
+          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
   })
 
   // Input Type
-  context.addType(whereInputTypeName, `${whereInputTypeName}Type`)
+  context.addType(inputType, `${inputType}Type`)
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${whereInputTypeName}Type`,
+        name: `${inputType}Type`,
         initializer(writer) {
-          writer.writeLine(`${whereInputBuilderName}()`)
+          writer.writeLine(`${inputBuilder}()`)
         },
       },
     ],
@@ -122,21 +159,20 @@ function generateOrderBy(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  const orderDefName = `${model.name}OrderBy`
-  const orderInputTypeName = `${model.name}OrderByInput`
-  const orderInputBuilderName = `build${capitalize(orderInputTypeName)}`
+  const { inputDefinition, inputType, inputBuilder } =
+    getNameMappings(model).orderBy
 
   // Fields definition
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${orderDefName}`,
+        name: `${inputDefinition}`,
         initializer(writer) {
           writer
             .inlineBlock(() => {
-              writer.writeLine(`$name: '${orderInputTypeName}',`)
+              writer.writeLine(`$name: '${inputType}',`)
               model.fields.forEach((field) => {
                 writer.write(`${field.name}:`)
                 writer.inlineBlock(() => {
@@ -157,27 +193,27 @@ function generateOrderBy(
   // Input type builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: orderInputBuilderName,
+        name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${orderDefName})`)
+          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
   })
 
   // Input Type
-  context.addType(orderInputTypeName, `${orderInputTypeName}Type`)
+  context.addType(inputType, `${inputType}Type`)
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${orderInputTypeName}Type`,
+        name: `${inputType}Type`,
         initializer(writer) {
-          writer.writeLine(`${orderInputBuilderName}()`)
+          writer.writeLine(`${inputBuilder}()`)
         },
       },
     ],
@@ -189,15 +225,15 @@ function generateQuery(
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
-  const builderName = `${lowerFirst(model.name)}Query`
+  const { builder } = getNameMappings(model).queryOne
 
   // Query builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}`,
+        name: `${builder}`,
         initializer(writer) {
           writer.writeLine(`createQueryBuilder('${model.name}')`)
         },
@@ -211,23 +247,25 @@ function generateListQuery(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  const listOutputTypeName = `${model.name}List`
-  const builderName = `${lowerFirst(model.name)}ListQuery`
-  const defaultQueryName = `${lowerFirst(model.name)}List`
+  const {
+    queryList: { outputType, builder, operationName },
+    where,
+    orderBy,
+  } = getNameMappings(model)
 
   // List output type
-  context.addType(listOutputTypeName, `${listOutputTypeName}Type`)
+  context.addType(outputType, `${outputType}Type`)
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${listOutputTypeName}Type`,
+        name: `${outputType}Type`,
         initializer(writer) {
           writer
             .write("objectType(")
             .inlineBlock(() => {
-              writer.writeLine(`name: '${listOutputTypeName}',`)
+              writer.writeLine(`name: '${outputType}',`)
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
@@ -246,10 +284,10 @@ function generateListQuery(
   // Resolver
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}Resolver`,
+        name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
             `createListQueryResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
@@ -262,13 +300,13 @@ function generateListQuery(
   // Query builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}`,
+        name: `${builder}`,
         initializer(writer) {
           writer.writeLine(
-            `createListQueryBuilder('${model.name}', '${defaultQueryName}', ${builderName}Resolver, build${model.name}WhereInput, build${model.name}OrderByInput)`
+            `createListQueryBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${where.inputBuilder}, ${orderBy.inputBuilder})`
           )
         },
       },
@@ -281,23 +319,20 @@ function generateCreate(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  const inputDef = `${model.name}Create`
-  const inputName = `${model.name}CreateInput`
-  const inputBuilder = `build${inputName}`
-  const builderName = `${lowerFirst(model.name)}CreateMutation`
-  const defaultMutationName = `${lowerFirst(model.name)}Create`
+  const { builder, inputBuilder, inputDefinition, inputType, operationName } =
+    getNameMappings(model).mutationCreate
 
   // Fields definition
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${inputDef}`,
+        name: `${inputDefinition}`,
         initializer(writer) {
           writer
             .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputName}',`)
+              writer.writeLine(`$name: '${inputDefinition}',`)
               model.fields.forEach((field) => {
                 const isScalar = field.kind === "scalar"
                 const { isRequired } = field
@@ -327,25 +362,25 @@ function generateCreate(
   // Input type builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDef})`)
+          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
   })
 
   // Input Type
-  context.addType(inputName, `${inputName}Type`)
+  context.addType(inputType, `${inputType}Type`)
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${inputName}Type`,
+        name: `${inputType}Type`,
         initializer(writer) {
           writer.writeLine(`${inputBuilder}()`)
         },
@@ -356,10 +391,10 @@ function generateCreate(
   // Resolver
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}Resolver`,
+        name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
             `createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateInput, PrismaLib.${model.name}>('${model.name}')`
@@ -372,13 +407,13 @@ function generateCreate(
   // Mutation builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}`,
+        name: `${builder}`,
         initializer(writer) {
           writer.writeLine(
-            `createCreateMutationBuilder('${model.name}', '${defaultMutationName}', ${builderName}Resolver, build${model.name}CreateInput)`
+            `createCreateMutationBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${inputBuilder})`
           )
         },
       },
@@ -391,23 +426,20 @@ function generateUpdate(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  const inputDef = `${model.name}Update`
-  const inputName = `${model.name}UpdateInput`
-  const inputBuilder = `build${inputName}`
-  const builderName = `${lowerFirst(model.name)}UpdateMutation`
-  const defaultMutationName = `${lowerFirst(model.name)}Update`
+  const { builder, inputBuilder, inputDefinition, inputType, operationName } =
+    getNameMappings(model).mutationUpdate
 
   // Fields definition
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${inputDef}`,
+        name: `${inputDefinition}`,
         initializer(writer) {
           writer
             .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputName}',`)
+              writer.writeLine(`$name: '${inputType}',`)
               model.fields.forEach((field) => {
                 const isScalar = field.kind === "scalar"
                 const isId = field.isId
@@ -438,25 +470,25 @@ function generateUpdate(
   // Input type builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDef})`)
+          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
   })
 
   // Input Type
-  context.addType(inputName, `${inputName}Type`)
+  context.addType(inputType, `${inputType}Type`)
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${inputName}Type`,
+        name: `${inputType}Type`,
         initializer(writer) {
           writer.writeLine(`${inputBuilder}()`)
         },
@@ -467,10 +499,10 @@ function generateUpdate(
   // Resolver
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
-    isExported: true,
+    isExported: false,
     declarations: [
       {
-        name: `${builderName}Resolver`,
+        name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
             `createUpdateMutationResolver<PrismaLib.Prisma.${model.name}UpdateInput, PrismaLib.${model.name}>('${model.name}')`
@@ -483,14 +515,56 @@ function generateUpdate(
   // Mutation builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${builder}`,
+        initializer(writer) {
+          writer.writeLine(
+            `createUpdateMutationBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${inputBuilder})`
+          )
+        },
+      },
+    ],
+  })
+}
+
+function generateExport(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  _context: GeneratorContext
+) {
+  const names = getNameMappings(model)
+
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
     isExported: true,
     declarations: [
       {
-        name: `${builderName}`,
+        name: `${model.name}CRUD`,
         initializer(writer) {
-          writer.writeLine(
-            `createUpdateMutationBuilder('${model.name}', '${defaultMutationName}', ${builderName}Resolver, build${model.name}UpdateInput)`
-          )
+          writer.block(() => {
+            writer.writeLine(`Where: ${names.where.inputDefinition},`)
+            writer.writeLine(`whereInputType: ${names.where.inputBuilder},`)
+            writer.writeLine(`OrderBy: ${names.orderBy.inputDefinition},`)
+            writer.writeLine(`orderByInputType: ${names.orderBy.inputBuilder},`)
+            writer.writeLine(`queryOne: ${names.queryOne.builder},`)
+            writer.writeLine(`queryList: ${names.queryList.builder},`)
+            writer.writeLine(`Create: ${names.mutationCreate.inputDefinition},`)
+            writer.writeLine(
+              `createInputType: ${names.mutationCreate.inputBuilder},`
+            )
+            writer.writeLine(
+              `mutationCreateOne: ${names.mutationCreate.builder},`
+            )
+            writer.writeLine(`Update: ${names.mutationUpdate.inputDefinition},`)
+            writer.writeLine(
+              `updateInputType: ${names.mutationUpdate.inputBuilder},`
+            )
+            writer.writeLine(
+              `mutationUpdateOne: ${names.mutationUpdate.builder},`
+            )
+          })
         },
       },
     ],
