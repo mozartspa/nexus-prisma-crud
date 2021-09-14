@@ -51,6 +51,8 @@ export async function generateAndEmit(
             "createQueryBuilder",
             "createListQueryBuilder",
             "createListQueryResolver",
+            "createCreateMutationResolver",
+            "createCreateMutationBuilder",
           ],
           moduleSpecifier: "../generator/runtime",
         },
