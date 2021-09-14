@@ -1,3 +1,5 @@
 export * from "./buildInputTypeFromFields"
 export * from "./createInputTypeBuilder"
+export * from "./createListQueryBuilder"
+export * from "./createListQueryResolver"
 export * from "./createQueryBuilder"

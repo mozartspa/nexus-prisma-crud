@@ -18,6 +18,7 @@ export function generateModel(
   generateWhere(sourceFile, model, context)
   generateOrderBy(sourceFile, model, context)
   generateQuery(sourceFile, model, context)
+  generateListQuery(sourceFile, model, context)
 }
 
 function generateWhere(
@@ -195,6 +196,76 @@ function generateQuery(
         name: `${builderName}`,
         initializer(writer) {
           writer.writeLine(`createQueryBuilder('${model.name}')`)
+        },
+      },
+    ],
+  })
+}
+
+function generateListQuery(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  context: GeneratorContext
+) {
+  const listOutputTypeName = `${model.name}List`
+  const builderName = `${lowerFirst(model.name)}ListQuery`
+  const defaultQueryName = `${lowerFirst(model.name)}List`
+
+  // List output type
+  context.addType(listOutputTypeName, `${listOutputTypeName}Type`)
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${listOutputTypeName}Type`,
+        initializer(writer) {
+          writer
+            .write("objectType(")
+            .inlineBlock(() => {
+              writer.writeLine(`name: '${listOutputTypeName}',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(
+                  `t.nonNull.list.field('items', { type: nonNull('${model.name}') })`
+                )
+                writer.writeLine(`t.nonNull.int('total')`)
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
+
+  // Resolver
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${builderName}Resolver`,
+        initializer(writer) {
+          writer.writeLine(
+            `createListQueryResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
+          )
+        },
+      },
+    ],
+  })
+
+  // Query builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${builderName}`,
+        initializer(writer) {
+          writer.writeLine(
+            `createListQueryBuilder('${model.name}', '${defaultQueryName}', ${builderName}Resolver, build${model.name}WhereInput, build${model.name}OrderByInput)`
+          )
         },
       },
     ],

@@ -1,4 +1,5 @@
 import { DMMF } from "@prisma/generator-helper"
+import path from "path"
 import { Project, StructureKind } from "ts-morph"
 import { SemicolonPreference } from "typescript"
 import { generateFilters } from "./filters"
@@ -6,11 +7,20 @@ import { generateGeneratedTypes } from "./generatedTypes"
 import { generateModel } from "./model"
 import { GeneratorContext } from "./types"
 
-export async function generateAndEmit(dmmf: DMMF.Document, outputPath: string) {
+export async function generateAndEmit(
+  dmmf: DMMF.Document,
+  outputPath: string,
+  prismaClientPath: string
+) {
+  const relativePrismaClientPath = path.relative(outputPath, prismaClientPath)
+
   const project = new Project({
     skipAddingFilesFromTsConfig: true,
     compilerOptions: {
       declaration: true,
+      skipLibCheck: true,
+      skipDefaultLibCheck: true,
+      types: [relativePrismaClientPath],
     },
   })
 
@@ -24,7 +34,13 @@ export async function generateAndEmit(dmmf: DMMF.Document, outputPath: string) {
       statements: [
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: ["enumType", "inputObjectType", "list"],
+          namedImports: [
+            "enumType",
+            "inputObjectType",
+            "objectType",
+            "list",
+            "nonNull",
+          ],
           moduleSpecifier: "nexus",
         },
         {
@@ -33,8 +49,15 @@ export async function generateAndEmit(dmmf: DMMF.Document, outputPath: string) {
             "buildInputTypeFromFields",
             "createInputTypeBuilder",
             "createQueryBuilder",
+            "createListQueryBuilder",
+            "createListQueryResolver",
           ],
           moduleSpecifier: "../generator/runtime",
+        },
+        {
+          kind: StructureKind.ImportDeclaration,
+          namespaceImport: "PrismaLib",
+          moduleSpecifier: relativePrismaClientPath,
         },
       ],
     },
