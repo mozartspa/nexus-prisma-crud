@@ -20,6 +20,7 @@ export function generateModel(
   generateQuery(sourceFile, model, context)
   generateListQuery(sourceFile, model, context)
   generateCreate(sourceFile, model, context)
+  generateUpdate(sourceFile, model, context)
 }
 
 function generateWhere(
@@ -376,6 +377,117 @@ function generateCreate(
         initializer(writer) {
           writer.writeLine(
             `createCreateMutationBuilder('${model.name}', '${defaultMutationName}', ${builderName}Resolver, build${model.name}CreateInput)`
+          )
+        },
+      },
+    ],
+  })
+}
+
+function generateUpdate(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  context: GeneratorContext
+) {
+  const inputDef = `${model.name}Update`
+  const inputName = `${model.name}UpdateInput`
+  const inputBuilder = `build${inputName}`
+  const builderName = `${lowerFirst(model.name)}UpdateMutation`
+  const defaultMutationName = `${lowerFirst(model.name)}Update`
+
+  // Fields definition
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${inputDef}`,
+        initializer(writer) {
+          writer
+            .inlineBlock(() => {
+              writer.writeLine(`$name: '${inputName}',`)
+              model.fields.forEach((field) => {
+                const isScalar = field.kind === "scalar"
+                const isId = field.isId
+
+                if (isId) {
+                  writer.write(`${field.name}:`)
+                  writer.inlineBlock(() => {
+                    writer.writeLine(`name: '${field.name}',`)
+                    writer.writeLine(`type: nonNull('${field.type}')`)
+                  })
+                  writer.write(",").newLine()
+                } else if (isScalar) {
+                  writer.write(`${field.name}:`)
+                  writer.inlineBlock(() => {
+                    writer.writeLine(`name: '${field.name}',`)
+                    writer.writeLine(`type: '${field.type}'`)
+                  })
+                  writer.write(",").newLine()
+                }
+              })
+            })
+            .newLine()
+        },
+      },
+    ],
+  })
+
+  // Input type builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: inputBuilder,
+        initializer(writer) {
+          writer.writeLine(`createInputTypeBuilder(${inputDef})`)
+        },
+      },
+    ],
+  })
+
+  // Input Type
+  context.addType(inputName, `${inputName}Type`)
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${inputName}Type`,
+        initializer(writer) {
+          writer.writeLine(`buildInputTypeFromFields(${inputDef})`)
+        },
+      },
+    ],
+  })
+
+  // Resolver
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${builderName}Resolver`,
+        initializer(writer) {
+          writer.writeLine(
+            `createUpdateMutationResolver<PrismaLib.Prisma.${model.name}UpdateInput, PrismaLib.${model.name}>('${model.name}')`
+          )
+        },
+      },
+    ],
+  })
+
+  // Mutation builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${builderName}`,
+        initializer(writer) {
+          writer.writeLine(
+            `createUpdateMutationBuilder('${model.name}', '${defaultMutationName}', ${builderName}Resolver, build${model.name}UpdateInput)`
           )
         },
       },

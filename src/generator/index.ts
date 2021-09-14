@@ -53,6 +53,8 @@ export async function generateAndEmit(
             "createListQueryResolver",
             "createCreateMutationResolver",
             "createCreateMutationBuilder",
+            "createUpdateMutationResolver",
+            "createUpdateMutationBuilder",
           ],
           moduleSpecifier: "../generator/runtime",
         },
