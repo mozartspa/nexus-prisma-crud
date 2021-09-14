@@ -550,6 +550,9 @@ function generateExport(
             writer.writeLine(`orderByInputType: ${names.orderBy.inputBuilder},`)
             writer.writeLine(`queryOne: ${names.queryOne.builder},`)
             writer.writeLine(`queryList: ${names.queryList.builder},`)
+            writer.writeLine(
+              `queryListResolver: ${names.queryList.builder}Resolver,`
+            )
             writer.writeLine(`Create: ${names.mutationCreate.inputDefinition},`)
             writer.writeLine(
               `createInputType: ${names.mutationCreate.inputBuilder},`
@@ -557,12 +560,18 @@ function generateExport(
             writer.writeLine(
               `mutationCreateOne: ${names.mutationCreate.builder},`
             )
+            writer.writeLine(
+              `mutationCreateOneResolver: ${names.mutationCreate.builder}Resolver,`
+            )
             writer.writeLine(`Update: ${names.mutationUpdate.inputDefinition},`)
             writer.writeLine(
               `updateInputType: ${names.mutationUpdate.inputBuilder},`
             )
             writer.writeLine(
               `mutationUpdateOne: ${names.mutationUpdate.builder},`
+            )
+            writer.writeLine(
+              `mutationUpdateOneResolver: ${names.mutationUpdate.builder}Resolver,`
             )
           })
         },
