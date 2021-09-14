@@ -46,7 +46,6 @@ export async function generateAndEmit(
         {
           kind: StructureKind.ImportDeclaration,
           namedImports: [
-            "buildInputTypeFromFields",
             "createInputTypeBuilder",
             "createQueryBuilder",
             "createListQueryBuilder",

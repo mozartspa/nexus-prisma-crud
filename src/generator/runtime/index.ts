@@ -1,4 +1,3 @@
-export * from "./buildInputTypeFromFields"
 export * from "./createCreateMutationBuilder"
 export * from "./createCreateMutationResolver"
 export * from "./createInputTypeBuilder"

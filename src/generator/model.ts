@@ -49,9 +49,11 @@ function generateWhere(
                   writer.writeLine(`name: '${field.name}',`)
                   if (field.kind === "scalar") {
                     if (field.isId && field.type === "String") {
-                      writer.writeLine(`type: 'IDFilterInput',`)
+                      writer.writeLine(`type: 'IDFilterInput' as const,`)
                     } else {
-                      writer.writeLine(`type: '${field.type}FilterInput',`)
+                      writer.writeLine(
+                        `type: '${field.type}FilterInput' as const,`
+                      )
                     }
                   }
                 })
@@ -108,7 +110,7 @@ function generateWhere(
       {
         name: `${whereInputTypeName}Type`,
         initializer(writer) {
-          writer.writeLine(`buildInputTypeFromFields(${whereDefName})`)
+          writer.writeLine(`${whereInputBuilderName}()`)
         },
       },
     ],
@@ -175,7 +177,7 @@ function generateOrderBy(
       {
         name: `${orderInputTypeName}Type`,
         initializer(writer) {
-          writer.writeLine(`buildInputTypeFromFields(${orderDefName})`)
+          writer.writeLine(`${orderInputBuilderName}()`)
         },
       },
     ],
@@ -345,7 +347,7 @@ function generateCreate(
       {
         name: `${inputName}Type`,
         initializer(writer) {
-          writer.writeLine(`buildInputTypeFromFields(${inputDef})`)
+          writer.writeLine(`${inputBuilder}()`)
         },
       },
     ],
@@ -456,7 +458,7 @@ function generateUpdate(
       {
         name: `${inputName}Type`,
         initializer(writer) {
-          writer.writeLine(`buildInputTypeFromFields(${inputDef})`)
+          writer.writeLine(`${inputBuilder}()`)
         },
       },
     ],
