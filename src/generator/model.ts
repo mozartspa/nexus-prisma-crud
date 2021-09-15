@@ -1,5 +1,6 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { asString, renderObject } from "./helpers"
 import { lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
 
@@ -17,6 +18,7 @@ function getNameMappings(model: DMMF.Model) {
     },
     queryOne: {
       builder: `${lowerFirst(model.name)}QueryOne`,
+      operationName: `${lowerFirst(model.name)}`,
     },
     queryList: {
       outputType: `${model.name}List`,
@@ -45,17 +47,10 @@ export function generateModel(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
-  //const whereUniqueInputTypeName = `${model.name}WhereUniqueInput`
-  //const whereInputName = `${model.name}Where`
-  //const whereInputTypeName = `${model.name}WhereInput`
-  //const orderByInputTypeName = `${model.name}OrderByInput`
-  //const modelRelationFilterName = `${model.name}RelationFilterInput`
-  //const modelListRelationFilterName = `${model.name}ListRelationFilterInput`
-
   generateWhere(sourceFile, model, context)
   generateOrderBy(sourceFile, model, context)
-  generateQuery(sourceFile, model, context)
-  generateListQuery(sourceFile, model, context)
+  generateQueryOne(sourceFile, model, context)
+  generateQueryList(sourceFile, model, context)
   generateCreate(sourceFile, model, context)
   generateUpdate(sourceFile, model, context)
   generateExport(sourceFile, model, context)
@@ -220,29 +215,51 @@ function generateOrderBy(
   })
 }
 
-function generateQuery(
+function generateQueryOne(
   sourceFile: SourceFile,
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
-  const { builder } = getNameMappings(model).queryOne
+  const { builder, operationName } = getNameMappings(model).queryOne
 
-  // Query builder
+  // Resolver
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: false,
     declarations: [
       {
-        name: `${builder}`,
+        name: `${builder}Resolver`,
         initializer(writer) {
-          writer.writeLine(`createQueryBuilder('${model.name}')`)
+          writer.writeLine(
+            `createQueryOneFieldResolver<PrismaLib.${model.name}>('${model.name}')`
+          )
+        },
+      },
+    ],
+  })
+
+  // Query field builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${builder}Field`,
+        initializer(writer) {
+          writer.writeLine(
+            `createQueryOneFieldBuilder(${renderObject({
+              modelName: asString(model.name),
+              defaultQueryName: asString(operationName),
+              defaultResolver: `${builder}Resolver`,
+            })})`
+          )
         },
       },
     ],
   })
 }
 
-function generateListQuery(
+function generateQueryList(
   sourceFile: SourceFile,
   model: DMMF.Model,
   context: GeneratorContext
@@ -290,23 +307,31 @@ function generateListQuery(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `createListQueryResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
+            `createQueryListFieldResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
           )
         },
       },
     ],
   })
 
-  // Query builder
+  // Query field builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: false,
     declarations: [
       {
-        name: `${builder}`,
+        name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createListQueryBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${where.inputBuilder}, ${orderBy.inputBuilder})`
+            `createQueryListFieldBuilder(${renderObject({
+              outputTypeName: asString(outputType),
+              defaultQueryName: asString(operationName),
+              defaultResolver: `${builder}Resolver`,
+              whereInputBuilder: where.inputBuilder,
+              orderByInputBuilder: orderBy.inputBuilder,
+              defaultWhereInputName: asString(where.inputType),
+              defaultOrderByInputName: asString(orderBy.inputType),
+            })})`
           )
         },
       },
@@ -332,7 +357,7 @@ function generateCreate(
         initializer(writer) {
           writer
             .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputDefinition}',`)
+              writer.writeLine(`$name: '${inputType}',`)
               model.fields.forEach((field) => {
                 const isScalar = field.kind === "scalar"
                 const { isRequired } = field
@@ -404,16 +429,22 @@ function generateCreate(
     ],
   })
 
-  // Mutation builder
+  // Mutation field builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: false,
     declarations: [
       {
-        name: `${builder}`,
+        name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createCreateMutationBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${inputBuilder})`
+            `createMutationFieldBuilder(${renderObject({
+              modelName: asString(model.name),
+              defaultMutationName: asString(operationName),
+              defaultResolver: `${builder}Resolver`,
+              inputBuilder: inputBuilder,
+              defaultInputType: asString(inputType),
+            })})`
           )
         },
       },
@@ -512,16 +543,22 @@ function generateUpdate(
     ],
   })
 
-  // Mutation builder
+  // Mutation field builder
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: false,
     declarations: [
       {
-        name: `${builder}`,
+        name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createUpdateMutationBuilder('${model.name}', '${operationName}', ${builder}Resolver, ${inputBuilder})`
+            `createMutationFieldBuilder(${renderObject({
+              modelName: asString(model.name),
+              defaultMutationName: asString(operationName),
+              defaultResolver: `${builder}Resolver`,
+              inputBuilder: inputBuilder,
+              defaultInputType: asString(inputType),
+            })})`
           )
         },
       },
@@ -548,8 +585,11 @@ function generateExport(
             writer.writeLine(`whereInputType: ${names.where.inputBuilder},`)
             writer.writeLine(`OrderBy: ${names.orderBy.inputDefinition},`)
             writer.writeLine(`orderByInputType: ${names.orderBy.inputBuilder},`)
-            writer.writeLine(`queryOne: ${names.queryOne.builder},`)
-            writer.writeLine(`queryList: ${names.queryList.builder},`)
+            writer.writeLine(`queryOne: ${names.queryOne.builder}Field,`)
+            writer.writeLine(
+              `queryOneResolver: ${names.queryOne.builder}Resolver,`
+            )
+            writer.writeLine(`queryList: ${names.queryList.builder}Field,`)
             writer.writeLine(
               `queryListResolver: ${names.queryList.builder}Resolver,`
             )
@@ -558,20 +598,20 @@ function generateExport(
               `createInputType: ${names.mutationCreate.inputBuilder},`
             )
             writer.writeLine(
-              `mutationCreateOne: ${names.mutationCreate.builder},`
+              `mutationCreate: ${names.mutationCreate.builder}Field,`
             )
             writer.writeLine(
-              `mutationCreateOneResolver: ${names.mutationCreate.builder}Resolver,`
+              `mutationCreateResolver: ${names.mutationCreate.builder}Resolver,`
             )
             writer.writeLine(`Update: ${names.mutationUpdate.inputDefinition},`)
             writer.writeLine(
               `updateInputType: ${names.mutationUpdate.inputBuilder},`
             )
             writer.writeLine(
-              `mutationUpdateOne: ${names.mutationUpdate.builder},`
+              `mutationUpdate: ${names.mutationUpdate.builder}Field,`
             )
             writer.writeLine(
-              `mutationUpdateOneResolver: ${names.mutationUpdate.builder}Resolver,`
+              `mutationUpdateResolver: ${names.mutationUpdate.builder}Resolver,`
             )
           })
         },
