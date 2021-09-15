@@ -1,5 +1,6 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { resolveUniqueIdentifiers } from "./helpers/constraints"
 import {
   getFieldDefinitionsForCreate,
   getFieldDefinitionsForOrderBy,
@@ -468,8 +469,11 @@ function generateUpdate(
       {
         name: `${builder}Resolver`,
         initializer(writer) {
+          const uniqueIdentifiers = resolveUniqueIdentifiers(model)
+            .map((name) => asString(name))
+            .join(",")
           writer.writeLine(
-            `createUpdateMutationResolver<PrismaLib.Prisma.${model.name}UpdateInput, PrismaLib.${model.name}>('${model.name}')`
+            `createUpdateMutationResolver<PrismaLib.Prisma.${model.name}UpdateInput, PrismaLib.${model.name}>('${model.name}', [${uniqueIdentifiers}])`
           )
         },
       },
@@ -599,6 +603,7 @@ function generateExport(
               `mutationDeleteResolver: ${names.mutationDelete.builder}Resolver,`
             )
           })
+          writer.newLine()
         },
       },
     ],

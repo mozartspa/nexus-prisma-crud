@@ -1,9 +1,10 @@
 import { GetGen } from "nexus/dist/typegenTypeHelpers"
-import { getPrismaClient, lowerFirst } from "./helpers"
+import { getPrismaClient, lowerFirst, splitRecord } from "./helpers"
 import { DeepNullable } from "./types"
 
 export function createUpdateMutationResolver<TUpdateInput, TModel>(
-  modelName: string
+  modelName: string,
+  uniqueIdentifiers: string[]
 ) {
   const resolver = async (
     _root: any,
@@ -16,10 +17,10 @@ export function createUpdateMutationResolver<TUpdateInput, TModel>(
 
     const update = prismaModel.update as (query: unknown) => Promise<TModel>
 
-    const { id, ...data } = args.data
+    const [ids, data] = splitRecord(args.data, uniqueIdentifiers)
 
     return await update({
-      where: { id },
+      where: ids,
       data,
     })
   }
