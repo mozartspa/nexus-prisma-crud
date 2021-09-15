@@ -40,6 +40,8 @@ export async function generateAndEmit(
             "objectType",
             "list",
             "nonNull",
+            "nullable",
+            "arg",
           ],
           moduleSpecifier: "nexus",
         },

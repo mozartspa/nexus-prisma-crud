@@ -1,6 +1,10 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
-import { asString, renderObject } from "./helpers"
+import {
+  renderUniqueIdentifiersAsArgs,
+  renderUniqueIdentifiersTSType,
+} from "./helpers/model"
+import { asString, renderObject } from "./helpers/render"
 import { lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
 
@@ -235,8 +239,9 @@ function generateQueryOne(
       {
         name: `${builder}Resolver`,
         initializer(writer) {
+          const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `createQueryOneFieldResolver<PrismaLib.${model.name}>('${model.name}')`
+            `createQueryOneFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
           )
         },
       },
@@ -256,6 +261,7 @@ function generateQueryOne(
               modelName: asString(model.name),
               defaultQueryName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
+              args: renderUniqueIdentifiersAsArgs(model),
             })})`
           )
         },
