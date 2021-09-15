@@ -1,6 +1,7 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
 import {
+  getFieldDefinitionsForCreate,
   renderUniqueIdentifiersAsArgs,
   renderUniqueIdentifiersTSType,
 } from "./helpers/model"
@@ -366,30 +367,12 @@ function generateCreate(
       {
         name: `${inputDefinition}`,
         initializer(writer) {
-          writer
-            .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputType}',`)
-              model.fields.forEach((field) => {
-                const isScalar = field.kind === "scalar"
-                const { isRequired } = field
-
-                if (isScalar) {
-                  writer.write(`${field.name}:`)
-                  writer.inlineBlock(() => {
-                    writer.writeLine(`name: '${field.name}',`)
-                    writer.writeLine(
-                      `type: ${
-                        isRequired
-                          ? `nonNull('${field.type}')`
-                          : `'${field.type}'`
-                      }`
-                    )
-                  })
-                  writer.write(",").newLine()
-                }
-              })
+          writer.writeLine(
+            renderObject({
+              $name: asString(inputType),
+              ...getFieldDefinitionsForCreate(model),
             })
-            .newLine()
+          )
         },
       },
     ],

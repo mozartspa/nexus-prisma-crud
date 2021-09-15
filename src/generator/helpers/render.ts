@@ -1,4 +1,4 @@
-type RenderObjectArg =
+export type RenderObjectArg =
   | string
   | null
   | undefined

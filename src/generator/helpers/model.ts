@@ -1,8 +1,8 @@
 import { DMMF } from "@prisma/generator-helper"
 import { resolveUniqueIdentifierFields } from "./constraints"
 import { StandardGraphQLScalarTypes } from "./graphql"
-import { PrismaScalarType } from "./prisma"
-import { renderObject } from "./render"
+import { isAutoincrement, PrismaScalarType } from "./prisma"
+import { asString, renderObject } from "./render"
 
 function allCasesHandled(x: never): never {
   throw new Error(`All cases were not handled:\n${x}`)
@@ -36,6 +36,29 @@ export function renderFieldAsArg(field: DMMF.Field): string {
   }
 }
 
+export function renderFieldAsNexusType(
+  field: DMMF.Field,
+  options: {
+    isRequired?: boolean
+  } = {}
+): string {
+  const graphqlType = fieldTypeToGraphQLType(field)
+
+  const { isRequired = field.isRequired } = options
+
+  if (field.isList) {
+    if (isRequired) {
+      return `nonNull(list(nonNull('${graphqlType}')))`
+    } else {
+      return `list(nonNull('${graphqlType}'))`
+    }
+  } else if (isRequired) {
+    return `nonNull('${graphqlType}')`
+  } else {
+    return `nullable('${graphqlType}')`
+  }
+}
+
 export function renderUniqueIdentifiersAsArgs(model: DMMF.Model): string {
   const fields = resolveUniqueIdentifierFields(model)
 
@@ -46,6 +69,32 @@ export function renderUniqueIdentifiersAsArgs(model: DMMF.Model): string {
   }
 
   return renderObject(type)
+}
+
+export function getFieldDefinitionsForCreate(model: DMMF.Model) {
+  let type = {} as Record<string, { name: string; type: string }>
+
+  model.fields.forEach((field) => {
+    // Only scalar and enum supported
+    if (!(field.kind === "scalar" || field.kind === "enum")) {
+      return
+    }
+
+    // Skip autoincrement and db generated fields
+    if (isAutoincrement(field) || field.isGenerated) {
+      return
+    }
+
+    // Not required if it has a default value
+    const isRequired = field.isRequired && !field.hasDefaultValue
+
+    type[field.name] = {
+      name: asString(field.name),
+      type: renderFieldAsNexusType(field, { isRequired }),
+    }
+  })
+
+  return type
 }
 
 export function fieldTypeToGraphQLType(field: DMMF.Field): string {
