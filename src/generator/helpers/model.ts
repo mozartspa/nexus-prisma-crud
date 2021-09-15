@@ -23,10 +23,14 @@ export function renderUniqueIdentifiersTSType(model: DMMF.Model): string {
 export function renderFieldAsArg(field: DMMF.Field): string {
   const graphqlType = fieldTypeToGraphQLType(field)
 
-  if (field.isList && field.isRequired) {
-    return `nonNull(list(nonNull(arg({ type: '${graphqlType}' }))))`
-  } else if (field.isList && !field.isRequired) {
-    return `list(nonNull(arg({ type: '${graphqlType}' })))`
+  if (field.isList) {
+    if (field.isRequired) {
+      return `nonNull(list(nonNull(arg({ type: '${graphqlType}' }))))`
+    } else {
+      return `list(nonNull(arg({ type: '${graphqlType}' })))`
+    }
+  } else if (field.isRequired) {
+    return `nonNull(arg({ type: '${graphqlType}' }))`
   } else {
     return `nullable(arg({ type: '${graphqlType}' }))`
   }
