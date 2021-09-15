@@ -2,6 +2,7 @@ import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
 import {
   getFieldDefinitionsForCreate,
+  getFieldDefinitionsForOrderBy,
   getFieldDefinitionsForUpdate,
   renderUniqueIdentifiersAsArgs,
   renderUniqueIdentifiersTSType,
@@ -176,21 +177,12 @@ function generateOrderBy(
       {
         name: `${inputDefinition}`,
         initializer(writer) {
-          writer
-            .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputType}',`)
-              model.fields.forEach((field) => {
-                writer.write(`${field.name}:`)
-                writer.inlineBlock(() => {
-                  writer.writeLine(`name: '${field.name}',`)
-                  if (field.kind === "scalar") {
-                    writer.writeLine(`type: 'SortDir',`)
-                  }
-                })
-                writer.write(",").newLine()
-              })
+          writer.writeLine(
+            renderObject({
+              $name: asString(inputType),
+              ...getFieldDefinitionsForOrderBy(model),
             })
-            .newLine()
+          )
         },
       },
     ],

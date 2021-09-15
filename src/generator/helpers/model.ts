@@ -123,6 +123,24 @@ export function getFieldDefinitionsForUpdate(model: DMMF.Model) {
   return type
 }
 
+export function getFieldDefinitionsForOrderBy(model: DMMF.Model) {
+  let type = {} as Record<string, { name: string; type: string }>
+
+  model.fields.forEach((field) => {
+    // Only scalar and enum supported
+    if (!(field.kind === "scalar" || field.kind === "enum")) {
+      return
+    }
+
+    type[field.name] = {
+      name: asString(field.name),
+      type: asString("SortDir"),
+    }
+  })
+
+  return type
+}
+
 export function fieldTypeToGraphQLType(field: DMMF.Field): string {
   const fieldKind = field.kind
 
