@@ -54,6 +54,8 @@ export async function generateAndEmit(
             "createCreateMutationResolver",
             "createUpdateMutationResolver",
             "createMutationFieldBuilder",
+            "createMutationDeleteFieldBuilder",
+            "createMutationDeleteFieldResolver",
           ],
           moduleSpecifier: "../generator/runtime",
         },

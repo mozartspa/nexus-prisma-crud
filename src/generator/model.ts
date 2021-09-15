@@ -39,6 +39,10 @@ function getNameMappings(model: DMMF.Model) {
       builder: `${lowerFirst(model.name)}MutationUpdateOne`,
       operationName: `${lowerFirst(model.name)}Update`,
     },
+    mutationDelete: {
+      builder: `${lowerFirst(model.name)}MutationDeleteOne`,
+      operationName: `${lowerFirst(model.name)}Delete`,
+    },
   }
 }
 
@@ -53,6 +57,7 @@ export function generateModel(
   generateQueryList(sourceFile, model, context)
   generateCreate(sourceFile, model, context)
   generateUpdate(sourceFile, model, context)
+  generateDelete(sourceFile, model, context)
   generateExport(sourceFile, model, context)
 }
 
@@ -566,6 +571,50 @@ function generateUpdate(
   })
 }
 
+function generateDelete(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  _context: GeneratorContext
+) {
+  const { builder, operationName } = getNameMappings(model).mutationDelete
+
+  // Resolver
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${builder}Resolver`,
+        initializer(writer) {
+          writer.writeLine(
+            `createMutationDeleteFieldResolver<PrismaLib.${model.name}>('${model.name}')`
+          )
+        },
+      },
+    ],
+  })
+
+  // Query field builder
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${builder}Field`,
+        initializer(writer) {
+          writer.writeLine(
+            `createMutationDeleteFieldBuilder(${renderObject({
+              modelName: asString(model.name),
+              defaultMutationName: asString(operationName),
+              defaultResolver: `${builder}Resolver`,
+            })})`
+          )
+        },
+      },
+    ],
+  })
+}
+
 function generateExport(
   sourceFile: SourceFile,
   model: DMMF.Model,
@@ -612,6 +661,12 @@ function generateExport(
             )
             writer.writeLine(
               `mutationUpdateResolver: ${names.mutationUpdate.builder}Resolver,`
+            )
+            writer.writeLine(
+              `mutationDelete: ${names.mutationDelete.builder}Field,`
+            )
+            writer.writeLine(
+              `mutationDeleteResolver: ${names.mutationDelete.builder}Resolver,`
             )
           })
         },

@@ -1,5 +1,7 @@
 export * from "./createCreateMutationResolver"
 export * from "./createInputTypeBuilder"
+export * from "./createMutationDeleteFieldBuilder"
+export * from "./createMutationDeleteFieldResolver"
 export * from "./createMutationFieldBuilder"
 export * from "./createQueryListFieldBuilder"
 export * from "./createQueryListFieldResolver"
