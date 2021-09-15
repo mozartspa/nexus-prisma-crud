@@ -592,8 +592,9 @@ function generateDelete(
       {
         name: `${builder}Resolver`,
         initializer(writer) {
+          const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `createMutationDeleteFieldResolver<PrismaLib.${model.name}>('${model.name}')`
+            `createMutationDeleteFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
           )
         },
       },
@@ -613,6 +614,7 @@ function generateDelete(
               modelName: asString(model.name),
               defaultMutationName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
+              args: renderUniqueIdentifiersAsArgs(model),
             })})`
           )
         },
