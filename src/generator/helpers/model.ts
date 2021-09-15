@@ -1,5 +1,8 @@
 import { DMMF } from "@prisma/generator-helper"
-import { resolveUniqueIdentifierFields } from "./constraints"
+import {
+  resolveUniqueIdentifierFields,
+  resolveUniqueIdentifiers,
+} from "./constraints"
 import { StandardGraphQLScalarTypes } from "./graphql"
 import { isAutoincrement, PrismaScalarType } from "./prisma"
 import { asString, renderObject } from "./render"
@@ -87,6 +90,29 @@ export function getFieldDefinitionsForCreate(model: DMMF.Model) {
 
     // Not required if it has a default value
     const isRequired = field.isRequired && !field.hasDefaultValue
+
+    type[field.name] = {
+      name: asString(field.name),
+      type: renderFieldAsNexusType(field, { isRequired }),
+    }
+  })
+
+  return type
+}
+
+export function getFieldDefinitionsForUpdate(model: DMMF.Model) {
+  let type = {} as Record<string, { name: string; type: string }>
+
+  const uniqueIdentifiers = resolveUniqueIdentifiers(model)
+
+  model.fields.forEach((field) => {
+    // Only scalar and enum supported
+    if (!(field.kind === "scalar" || field.kind === "enum")) {
+      return
+    }
+
+    // Required only if it is an ID
+    const isRequired = uniqueIdentifiers.includes(field.name)
 
     type[field.name] = {
       name: asString(field.name),

@@ -2,6 +2,7 @@ import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
 import {
   getFieldDefinitionsForCreate,
+  getFieldDefinitionsForUpdate,
   renderUniqueIdentifiersAsArgs,
   renderUniqueIdentifiersTSType,
 } from "./helpers/model"
@@ -462,31 +463,12 @@ function generateUpdate(
       {
         name: `${inputDefinition}`,
         initializer(writer) {
-          writer
-            .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputType}',`)
-              model.fields.forEach((field) => {
-                const isScalar = field.kind === "scalar"
-                const isId = field.isId
-
-                if (isId) {
-                  writer.write(`${field.name}:`)
-                  writer.inlineBlock(() => {
-                    writer.writeLine(`name: '${field.name}',`)
-                    writer.writeLine(`type: nonNull('${field.type}')`)
-                  })
-                  writer.write(",").newLine()
-                } else if (isScalar) {
-                  writer.write(`${field.name}:`)
-                  writer.inlineBlock(() => {
-                    writer.writeLine(`name: '${field.name}',`)
-                    writer.writeLine(`type: '${field.type}'`)
-                  })
-                  writer.write(",").newLine()
-                }
-              })
+          writer.writeLine(
+            renderObject({
+              $name: asString(inputType),
+              ...getFieldDefinitionsForUpdate(model),
             })
-            .newLine()
+          )
         },
       },
     ],
