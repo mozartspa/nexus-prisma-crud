@@ -4,6 +4,7 @@ import {
   getFieldDefinitionsForCreate,
   getFieldDefinitionsForOrderBy,
   getFieldDefinitionsForUpdate,
+  getFieldDefinitionsForWhere,
   renderUniqueIdentifiersAsArgs,
   renderUniqueIdentifiersTSType,
 } from "./helpers/model"
@@ -84,48 +85,12 @@ function generateWhere(
       {
         name: `${inputDefinition}`,
         initializer(writer) {
-          writer
-            .inlineBlock(() => {
-              writer.writeLine(`$name: '${inputType}',`)
-              model.fields.forEach((field) => {
-                writer.write(`${field.name}:`)
-                writer.inlineBlock(() => {
-                  writer.writeLine(`name: '${field.name}',`)
-                  if (field.kind === "scalar") {
-                    if (field.isId && field.type === "String") {
-                      writer.writeLine(`type: 'IDFilterInput' as const,`)
-                    } else {
-                      writer.writeLine(
-                        `type: '${field.type}FilterInput' as const,`
-                      )
-                    }
-                  }
-                })
-                writer.write(",").newLine()
-              })
-
-              writer.write(`AND:`)
-              writer.inlineBlock(() => {
-                writer.writeLine(`name: 'AND',`)
-                writer.writeLine(`type: list('${inputType}'),`)
-              })
-              writer.write(",").newLine()
-
-              writer.write(`OR:`)
-              writer.inlineBlock(() => {
-                writer.writeLine(`name: 'OR',`)
-                writer.writeLine(`type: list('${inputType}'),`)
-              })
-              writer.write(",").newLine()
-
-              writer.write(`NOT:`)
-              writer.inlineBlock(() => {
-                writer.writeLine(`name: 'NOT',`)
-                writer.writeLine(`type: list('${inputType}'),`)
-              })
-              writer.write(",").newLine()
+          writer.writeLine(
+            renderObject({
+              $name: asString(inputType),
+              ...getFieldDefinitionsForWhere(model, inputType),
             })
-            .newLine()
+          )
         },
       },
     ],

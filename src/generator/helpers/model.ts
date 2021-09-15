@@ -141,6 +141,44 @@ export function getFieldDefinitionsForOrderBy(model: DMMF.Model) {
   return type
 }
 
+export function getFieldDefinitionsForWhere(
+  model: DMMF.Model,
+  inputTypeName: string
+) {
+  let type = {} as Record<string, { name: string; type: string }>
+
+  model.fields.forEach((field) => {
+    // Only scalar supported
+    if (!(field.kind === "scalar")) {
+      return
+    }
+
+    const graphqlType = fieldTypeToGraphQLType(field)
+
+    type[field.name] = {
+      name: asString(field.name),
+      type: `nullable(${asString(`${graphqlType}FilterInput`)})`,
+    }
+  })
+
+  type["AND"] = {
+    name: asString("AND"),
+    type: `nullable(list('${inputTypeName}'))`,
+  }
+
+  type["OR"] = {
+    name: asString("OR"),
+    type: `nullable(list('${inputTypeName}'))`,
+  }
+
+  type["NOT"] = {
+    name: asString("NOT"),
+    type: `nullable(list('${inputTypeName}'))`,
+  }
+
+  return type
+}
+
 export function fieldTypeToGraphQLType(field: DMMF.Field): string {
   const fieldKind = field.kind
 
