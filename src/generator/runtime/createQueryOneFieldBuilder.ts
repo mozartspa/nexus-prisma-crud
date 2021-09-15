@@ -1,4 +1,5 @@
 import { FieldResolver, intArg, nonNull } from "nexus"
+import { NexusOutputFieldConfig } from "nexus/dist/core"
 
 export type CreateQueryOneFieldBuilderOptions<
   TModelName extends string,
@@ -20,10 +21,20 @@ export function createQueryOneFieldBuilder<
     resolve?: FieldResolver<"Query", QueryName>
   }
 
+  type BuilderOptions<QueryName extends string> = Options<QueryName> &
+    Omit<
+      NexusOutputFieldConfig<"Query", QueryName>,
+      keyof Options<QueryName> | "type" | "args"
+    >
+
   return <QueryName extends string = TQueryName>(
-    options: Options<QueryName> = {}
+    options: BuilderOptions<QueryName> = {}
   ) => {
-    const { name = defaultQueryName, resolve = defaultResolver } = options
+    const {
+      name = defaultQueryName,
+      resolve = defaultResolver,
+      ...rest
+    } = options
 
     return {
       name,
@@ -32,6 +43,7 @@ export function createQueryOneFieldBuilder<
         id: nonNull(intArg()),
       },
       resolve,
+      ...rest,
     }
   }
 }

@@ -1,5 +1,6 @@
 import { inputObjectType } from "nexus"
 import { InputDefinitionBlock } from "nexus/dist/blocks"
+import { NexusInputObjectTypeConfig } from "nexus/dist/core"
 import { InputDefinition, InputDefinitionFieldSelector } from "./types"
 
 export function createInputTypeBuilder<T>(inputDef: InputDefinition<T>) {
@@ -10,8 +11,17 @@ export function createInputTypeBuilder<T>(inputDef: InputDefinition<T>) {
     extraDefinition?: (t: InputDefinitionBlock<string>) => void
   }
 
-  return (options: Options = {}) => {
-    const { name = inputDef.$name, include, exclude, extraDefinition } = options
+  type BuilderOptions = Options &
+    Omit<NexusInputObjectTypeConfig<string>, keyof Options | "definition">
+
+  return (options: BuilderOptions = {}) => {
+    const {
+      name = inputDef.$name,
+      include,
+      exclude,
+      extraDefinition,
+      ...rest
+    } = options
 
     return inputObjectType({
       name,
@@ -30,6 +40,7 @@ export function createInputTypeBuilder<T>(inputDef: InputDefinition<T>) {
 
         extraDefinition?.(t)
       },
+      ...rest,
     })
   }
 }

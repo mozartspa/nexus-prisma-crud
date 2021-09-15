@@ -1,5 +1,8 @@
 import { arg, FieldResolver, nonNull } from "nexus"
-import { NexusInputObjectTypeDef } from "nexus/dist/core"
+import {
+  NexusInputObjectTypeDef,
+  NexusOutputFieldConfig,
+} from "nexus/dist/core"
 
 export type CreateMutationFieldBuilderOptions<
   TModelName extends string,
@@ -38,14 +41,23 @@ export function createMutationFieldBuilder<
     resolve?: FieldResolver<"Mutation", MutationName>
   }
 
-  return <MutationName extends string = TMutationName>(
-    options: Options<MutationName> = {}
-  ) => {
-    const { name = defaultMutationName, resolve = defaultResolver } = options
+  type BuilderOptions<MutationName extends string> = Options<MutationName> &
+    Omit<
+      NexusOutputFieldConfig<"Mutation", MutationName>,
+      keyof Options<MutationName> | "type" | "args"
+    >
 
-    const inputArgType = options.input
-      ? inputBuilder(options.input)
-      : defaultInputType
+  return <MutationName extends string = TMutationName>(
+    options: BuilderOptions<MutationName> = {}
+  ) => {
+    const {
+      name = defaultMutationName,
+      resolve = defaultResolver,
+      input,
+      ...rest
+    } = options
+
+    const inputArgType = input ? inputBuilder(input) : defaultInputType
 
     return {
       name,
@@ -54,6 +66,7 @@ export function createMutationFieldBuilder<
         data: nonNull(arg({ type: inputArgType })),
       },
       resolve,
+      ...rest,
     }
   }
 }

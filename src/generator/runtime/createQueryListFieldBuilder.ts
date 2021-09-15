@@ -1,5 +1,8 @@
 import { arg, FieldResolver, intArg, list } from "nexus"
-import { NexusInputObjectTypeDef } from "nexus/dist/core"
+import {
+  NexusInputObjectTypeDef,
+  NexusOutputFieldConfig,
+} from "nexus/dist/core"
 
 export type CreateQueryListFieldBuilderOptions<
   TOutputTypeName extends string,
@@ -48,14 +51,21 @@ export function createQueryListFieldBuilder<
     resolve?: FieldResolver<"Query", QueryName>
   }
 
+  type BuilderOptions<QueryName extends string> = Options<QueryName> &
+    Omit<
+      NexusOutputFieldConfig<"Query", QueryName>,
+      keyof Options<QueryName> | "type" | "args"
+    >
+
   return <QueryName extends string = TQueryName>(
-    options: Options<QueryName> = {}
+    options: BuilderOptions<QueryName> = {}
   ) => {
     const {
       name = defaultQueryName,
       where,
       orderBy,
       resolve = defaultResolver,
+      ...rest
     } = options
 
     const whereArgType = where
@@ -76,6 +86,7 @@ export function createQueryListFieldBuilder<
         orderBy: list(arg({ type: orderByArgType })),
       },
       resolve,
+      ...rest,
     }
   }
 }
