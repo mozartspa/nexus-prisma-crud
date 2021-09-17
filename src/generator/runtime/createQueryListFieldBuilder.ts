@@ -21,6 +21,23 @@ export type CreateQueryListFieldBuilderOptions<
   defaultOrderByInputName: string
 }
 
+type Options<QueryName extends string, TWhereOptions, TOrderByOptions> = {
+  name?: QueryName
+  where?: TWhereOptions
+  orderBy?: TOrderByOptions
+  resolve?: FieldResolver<"Query", QueryName>
+}
+
+type BuilderOptions<
+  QueryName extends string,
+  TWhereOptions,
+  TOrderByOptions
+> = Options<QueryName, TWhereOptions, TOrderByOptions> &
+  Omit<
+    NexusOutputFieldConfig<"Query", QueryName>,
+    keyof Options<QueryName, TWhereOptions, TOrderByOptions> | "type" | "args"
+  >
+
 export function createQueryListFieldBuilder<
   TOutputTypeName extends string,
   TQueryName extends string,
@@ -44,21 +61,8 @@ export function createQueryListFieldBuilder<
     defaultOrderByInputName,
   } = options
 
-  type Options<QueryName extends string> = {
-    name?: QueryName
-    where?: TWhereOptions
-    orderBy?: TOrderByOptions
-    resolve?: FieldResolver<"Query", QueryName>
-  }
-
-  type BuilderOptions<QueryName extends string> = Options<QueryName> &
-    Omit<
-      NexusOutputFieldConfig<"Query", QueryName>,
-      keyof Options<QueryName> | "type" | "args"
-    >
-
   return <QueryName extends string = TQueryName>(
-    options: BuilderOptions<QueryName> = {}
+    options: BuilderOptions<QueryName, TWhereOptions, TOrderByOptions> = {}
   ) => {
     const {
       name = defaultQueryName,

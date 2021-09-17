@@ -16,6 +16,21 @@ export type CreateMutationFieldBuilderOptions<
   defaultInputType: string
 }
 
+type Options<MutationName extends string, TInputOption> = {
+  name?: MutationName
+  input?: TInputOption
+  resolve?: FieldResolver<"Mutation", MutationName>
+}
+
+type BuilderOptions<MutationName extends string, TInputOption> = Options<
+  MutationName,
+  TInputOption
+> &
+  Omit<
+    NexusOutputFieldConfig<"Mutation", MutationName>,
+    keyof Options<MutationName, TInputOption> | "type" | "args"
+  >
+
 export function createMutationFieldBuilder<
   TModelName extends string,
   TMutationName extends string,
@@ -35,20 +50,8 @@ export function createMutationFieldBuilder<
     defaultInputType,
   } = options
 
-  type Options<MutationName extends string> = {
-    name?: MutationName
-    input?: TInputOption
-    resolve?: FieldResolver<"Mutation", MutationName>
-  }
-
-  type BuilderOptions<MutationName extends string> = Options<MutationName> &
-    Omit<
-      NexusOutputFieldConfig<"Mutation", MutationName>,
-      keyof Options<MutationName> | "type" | "args"
-    >
-
   return <MutationName extends string = TMutationName>(
-    options: BuilderOptions<MutationName> = {}
+    options: BuilderOptions<MutationName, TInputOption> = {}
   ) => {
     const {
       name = defaultMutationName,
