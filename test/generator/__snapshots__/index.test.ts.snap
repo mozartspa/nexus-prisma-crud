@@ -1,0 +1,652 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can generate module with models and relations 1`] = `
+"import { enumType, inputObjectType, objectType, list, nonNull, nullable, arg } from \\"nexus\\"
+import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver } from \\"../generator/runtime\\"
+import * as PrismaLib from \\"../client\\"
+
+export const SortDirEnum = enumType({
+  name: 'SortDir',
+  members: { \\"asc\\": \\"asc\\", \\"desc\\": \\"desc\\" }
+})
+  
+export const IDFilterInputType = inputObjectType({
+  name: 'IDFilterInput',
+  definition(t) {
+    t.id('equals')
+    t.list.id('in')
+    t.list.id('notIn')
+    t.id('lt')
+    t.id('lte')
+    t.id('gt')
+    t.id('gte')
+    t.field('not', { type: 'IDFilterInput' as any })
+  }
+})
+  
+export const StringFilterInputType = inputObjectType({
+  name: 'StringFilterInput',
+  definition(t) {
+    t.string('equals')
+    t.string('contains')
+    t.string('startsWith')
+    t.string('endsWith')
+    t.list.string('in')
+    t.list.string('notIn')
+    t.string('lt')
+    t.string('lte')
+    t.string('gt')
+    t.string('gte')
+    t.field('not', { type: 'StringFilterInput' as any })
+  }
+})
+  
+export const IntFilterInputType = inputObjectType({
+  name: 'IntFilterInput',
+  definition(t) {
+    t.int('equals')
+    t.list.int('in')
+    t.list.int('notIn')
+    t.int('lt')
+    t.int('lte')
+    t.int('gt')
+    t.int('gte')
+    t.field('not', { type: 'IntFilterInput' as any })
+  }
+})
+  
+export const FloatFilterInputType = inputObjectType({
+  name: 'FloatFilterInput',
+  definition(t) {
+    t.float('equals')
+    t.list.float('in')
+    t.list.float('notIn')
+    t.float('lt')
+    t.float('lte')
+    t.float('gt')
+    t.float('gte')
+    t.field('not', { type: 'FloatFilterInput' as any })
+  }
+})
+  
+export const BooleanFilterInputType = inputObjectType({
+  name: 'BooleanFilterInput',
+  definition(t) {
+    t.boolean('equals')
+    t.field('not', { type: 'BooleanFilterInput' as any })
+  }
+})
+  
+export const DateTimeFilterInputType = inputObjectType({
+  name: 'DateTimeFilterInput',
+  definition(t) {
+    t.field('equals', { type: 'DateTime' as any })
+    t.list.field('in', { type: 'DateTime' as any })
+    t.list.field('notIn', { type: 'DateTime' as any })
+    t.field('lt', { type: 'DateTime' as any })
+    t.field('lte', { type: 'DateTime' as any })
+    t.field('gt', { type: 'DateTime' as any })
+    t.field('gte', { type: 'DateTime' as any })
+    t.field('not', { type: 'DateTimeFilterInput' as any })
+  }
+})
+  
+const UserWhere = {
+  $name: 'UserWhereInput',
+  id: {
+    name: 'id',
+    type: nullable('IntFilterInput')
+  },
+  username: {
+    name: 'username',
+    type: nullable('StringFilterInput')
+  },
+  name: {
+    name: 'name',
+    type: nullable('StringFilterInput')
+  },
+  age: {
+    name: 'age',
+    type: nullable('IntFilterInput')
+  },
+  AND: {
+    name: 'AND',
+    type: nullable(list('UserWhereInput'))
+  },
+  OR: {
+    name: 'OR',
+    type: nullable(list('UserWhereInput'))
+  },
+  NOT: {
+    name: 'NOT',
+    type: nullable(list('UserWhereInput'))
+  }
+}
+  
+const buildUserWhereInput = createInputTypeBuilder(UserWhere)
+  
+export const UserWhereInputType = buildUserWhereInput()
+  
+const UserOrderBy = {
+  $name: 'UserOrderByInput',
+  id: {
+    name: 'id',
+    type: 'SortDir'
+  },
+  username: {
+    name: 'username',
+    type: 'SortDir'
+  },
+  name: {
+    name: 'name',
+    type: 'SortDir'
+  },
+  age: {
+    name: 'age',
+    type: 'SortDir'
+  }
+}
+  
+const buildUserOrderByInput = createInputTypeBuilder(UserOrderBy)
+  
+export const UserOrderByInputType = buildUserOrderByInput()
+  
+const userQueryOneResolver = createQueryOneFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
+  
+const userQueryOneField = createQueryOneFieldBuilder({
+  modelName: 'User',
+  defaultQueryName: 'user',
+  defaultResolver: userQueryOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const UserListType = objectType({
+  name: 'UserList',
+  definition(t) {
+    t.nonNull.list.field('items', { type: nonNull('User') })
+    t.nonNull.int('total')
+  }
+})
+  
+const userQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.UserFindManyArgs, PrismaLib.User>('User')
+  
+const userQueryListField = createQueryListFieldBuilder({
+  outputTypeName: 'UserList',
+  defaultQueryName: 'userList',
+  defaultResolver: userQueryListResolver,
+  whereInputBuilder: buildUserWhereInput,
+  orderByInputBuilder: buildUserOrderByInput,
+  defaultWhereInputName: 'UserWhereInput',
+  defaultOrderByInputName: 'UserOrderByInput'
+})
+  
+const UserCreate = {
+  $name: 'UserCreateInput',
+  username: {
+    name: 'username',
+    type: nonNull('String')
+  },
+  name: {
+    name: 'name',
+    type: nullable('String')
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int')
+  }
+}
+  
+const buildUserCreateInput = createInputTypeBuilder(UserCreate)
+  
+export const UserCreateInputType = buildUserCreateInput()
+  
+const userMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.UserCreateInput, PrismaLib.User>('User')
+  
+const userMutationCreateOneField = createMutationFieldBuilder({
+  modelName: 'User',
+  defaultMutationName: 'userCreate',
+  defaultResolver: userMutationCreateOneResolver,
+  inputBuilder: buildUserCreateInput,
+  defaultInputType: 'UserCreateInput'
+})
+  
+const UserUpdate = {
+  $name: 'UserUpdateInput',
+  id: {
+    name: 'id',
+    type: nonNull('Int')
+  },
+  username: {
+    name: 'username',
+    type: nullable('String')
+  },
+  name: {
+    name: 'name',
+    type: nullable('String')
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int')
+  }
+}
+  
+const buildUserUpdateInput = createInputTypeBuilder(UserUpdate)
+  
+export const UserUpdateInputType = buildUserUpdateInput()
+  
+const userMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.UserUpdateInput, PrismaLib.User>('User', ['id'])
+  
+const userMutationUpdateOneField = createMutationFieldBuilder({
+  modelName: 'User',
+  defaultMutationName: 'userUpdate',
+  defaultResolver: userMutationUpdateOneResolver,
+  inputBuilder: buildUserUpdateInput,
+  defaultInputType: 'UserUpdateInput'
+})
+  
+const userMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
+  
+const userMutationDeleteOneField = createMutationDeleteFieldBuilder({
+  modelName: 'User',
+  defaultMutationName: 'userDelete',
+  defaultResolver: userMutationDeleteOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const UserCRUD = {
+  Where: UserWhere,
+  whereInputType: buildUserWhereInput,
+  OrderBy: UserOrderBy,
+  orderByInputType: buildUserOrderByInput,
+  queryOne: userQueryOneField,
+  queryOneResolver: userQueryOneResolver,
+  queryList: userQueryListField,
+  queryListResolver: userQueryListResolver,
+  Create: UserCreate,
+  createInputType: buildUserCreateInput,
+  mutationCreate: userMutationCreateOneField,
+  mutationCreateResolver: userMutationCreateOneResolver,
+  Update: UserUpdate,
+  updateInputType: buildUserUpdateInput,
+  mutationUpdate: userMutationUpdateOneField,
+  mutationUpdateResolver: userMutationUpdateOneResolver,
+  mutationDelete: userMutationDeleteOneField,
+  mutationDeleteResolver: userMutationDeleteOneResolver,
+}
+  
+const ClientWhere = {
+  $name: 'ClientWhereInput',
+  id: {
+    name: 'id',
+    type: nullable('IntFilterInput')
+  },
+  name: {
+    name: 'name',
+    type: nullable('StringFilterInput')
+  },
+  age: {
+    name: 'age',
+    type: nullable('IntFilterInput')
+  },
+  AND: {
+    name: 'AND',
+    type: nullable(list('ClientWhereInput'))
+  },
+  OR: {
+    name: 'OR',
+    type: nullable(list('ClientWhereInput'))
+  },
+  NOT: {
+    name: 'NOT',
+    type: nullable(list('ClientWhereInput'))
+  }
+}
+  
+const buildClientWhereInput = createInputTypeBuilder(ClientWhere)
+  
+export const ClientWhereInputType = buildClientWhereInput()
+  
+const ClientOrderBy = {
+  $name: 'ClientOrderByInput',
+  id: {
+    name: 'id',
+    type: 'SortDir'
+  },
+  name: {
+    name: 'name',
+    type: 'SortDir'
+  },
+  age: {
+    name: 'age',
+    type: 'SortDir'
+  }
+}
+  
+const buildClientOrderByInput = createInputTypeBuilder(ClientOrderBy)
+  
+export const ClientOrderByInputType = buildClientOrderByInput()
+  
+const clientQueryOneResolver = createQueryOneFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
+  
+const clientQueryOneField = createQueryOneFieldBuilder({
+  modelName: 'Client',
+  defaultQueryName: 'client',
+  defaultResolver: clientQueryOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const ClientListType = objectType({
+  name: 'ClientList',
+  definition(t) {
+    t.nonNull.list.field('items', { type: nonNull('Client') })
+    t.nonNull.int('total')
+  }
+})
+  
+const clientQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.ClientFindManyArgs, PrismaLib.Client>('Client')
+  
+const clientQueryListField = createQueryListFieldBuilder({
+  outputTypeName: 'ClientList',
+  defaultQueryName: 'clientList',
+  defaultResolver: clientQueryListResolver,
+  whereInputBuilder: buildClientWhereInput,
+  orderByInputBuilder: buildClientOrderByInput,
+  defaultWhereInputName: 'ClientWhereInput',
+  defaultOrderByInputName: 'ClientOrderByInput'
+})
+  
+const ClientCreate = {
+  $name: 'ClientCreateInput',
+  name: {
+    name: 'name',
+    type: nullable('String')
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int')
+  }
+}
+  
+const buildClientCreateInput = createInputTypeBuilder(ClientCreate)
+  
+export const ClientCreateInputType = buildClientCreateInput()
+  
+const clientMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ClientCreateInput, PrismaLib.Client>('Client')
+  
+const clientMutationCreateOneField = createMutationFieldBuilder({
+  modelName: 'Client',
+  defaultMutationName: 'clientCreate',
+  defaultResolver: clientMutationCreateOneResolver,
+  inputBuilder: buildClientCreateInput,
+  defaultInputType: 'ClientCreateInput'
+})
+  
+const ClientUpdate = {
+  $name: 'ClientUpdateInput',
+  id: {
+    name: 'id',
+    type: nonNull('Int')
+  },
+  name: {
+    name: 'name',
+    type: nullable('String')
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int')
+  }
+}
+  
+const buildClientUpdateInput = createInputTypeBuilder(ClientUpdate)
+  
+export const ClientUpdateInputType = buildClientUpdateInput()
+  
+const clientMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.ClientUpdateInput, PrismaLib.Client>('Client', ['id'])
+  
+const clientMutationUpdateOneField = createMutationFieldBuilder({
+  modelName: 'Client',
+  defaultMutationName: 'clientUpdate',
+  defaultResolver: clientMutationUpdateOneResolver,
+  inputBuilder: buildClientUpdateInput,
+  defaultInputType: 'ClientUpdateInput'
+})
+  
+const clientMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
+  
+const clientMutationDeleteOneField = createMutationDeleteFieldBuilder({
+  modelName: 'Client',
+  defaultMutationName: 'clientDelete',
+  defaultResolver: clientMutationDeleteOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const ClientCRUD = {
+  Where: ClientWhere,
+  whereInputType: buildClientWhereInput,
+  OrderBy: ClientOrderBy,
+  orderByInputType: buildClientOrderByInput,
+  queryOne: clientQueryOneField,
+  queryOneResolver: clientQueryOneResolver,
+  queryList: clientQueryListField,
+  queryListResolver: clientQueryListResolver,
+  Create: ClientCreate,
+  createInputType: buildClientCreateInput,
+  mutationCreate: clientMutationCreateOneField,
+  mutationCreateResolver: clientMutationCreateOneResolver,
+  Update: ClientUpdate,
+  updateInputType: buildClientUpdateInput,
+  mutationUpdate: clientMutationUpdateOneField,
+  mutationUpdateResolver: clientMutationUpdateOneResolver,
+  mutationDelete: clientMutationDeleteOneField,
+  mutationDeleteResolver: clientMutationDeleteOneResolver,
+}
+  
+const ContactWhere = {
+  $name: 'ContactWhereInput',
+  id: {
+    name: 'id',
+    type: nullable('IntFilterInput')
+  },
+  name: {
+    name: 'name',
+    type: nullable('StringFilterInput')
+  },
+  phone: {
+    name: 'phone',
+    type: nullable('StringFilterInput')
+  },
+  clientId: {
+    name: 'clientId',
+    type: nullable('IntFilterInput')
+  },
+  AND: {
+    name: 'AND',
+    type: nullable(list('ContactWhereInput'))
+  },
+  OR: {
+    name: 'OR',
+    type: nullable(list('ContactWhereInput'))
+  },
+  NOT: {
+    name: 'NOT',
+    type: nullable(list('ContactWhereInput'))
+  }
+}
+  
+const buildContactWhereInput = createInputTypeBuilder(ContactWhere)
+  
+export const ContactWhereInputType = buildContactWhereInput()
+  
+const ContactOrderBy = {
+  $name: 'ContactOrderByInput',
+  id: {
+    name: 'id',
+    type: 'SortDir'
+  },
+  name: {
+    name: 'name',
+    type: 'SortDir'
+  },
+  phone: {
+    name: 'phone',
+    type: 'SortDir'
+  },
+  clientId: {
+    name: 'clientId',
+    type: 'SortDir'
+  }
+}
+  
+const buildContactOrderByInput = createInputTypeBuilder(ContactOrderBy)
+  
+export const ContactOrderByInputType = buildContactOrderByInput()
+  
+const contactQueryOneResolver = createQueryOneFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
+  
+const contactQueryOneField = createQueryOneFieldBuilder({
+  modelName: 'Contact',
+  defaultQueryName: 'contact',
+  defaultResolver: contactQueryOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const ContactListType = objectType({
+  name: 'ContactList',
+  definition(t) {
+    t.nonNull.list.field('items', { type: nonNull('Contact') })
+    t.nonNull.int('total')
+  }
+})
+  
+const contactQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.ContactFindManyArgs, PrismaLib.Contact>('Contact')
+  
+const contactQueryListField = createQueryListFieldBuilder({
+  outputTypeName: 'ContactList',
+  defaultQueryName: 'contactList',
+  defaultResolver: contactQueryListResolver,
+  whereInputBuilder: buildContactWhereInput,
+  orderByInputBuilder: buildContactOrderByInput,
+  defaultWhereInputName: 'ContactWhereInput',
+  defaultOrderByInputName: 'ContactOrderByInput'
+})
+  
+const ContactCreate = {
+  $name: 'ContactCreateInput',
+  name: {
+    name: 'name',
+    type: nonNull('String')
+  },
+  phone: {
+    name: 'phone',
+    type: nullable('String')
+  },
+  clientId: {
+    name: 'clientId',
+    type: nonNull('Int')
+  }
+}
+  
+const buildContactCreateInput = createInputTypeBuilder(ContactCreate)
+  
+export const ContactCreateInputType = buildContactCreateInput()
+  
+const contactMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ContactCreateInput, PrismaLib.Contact>('Contact')
+  
+const contactMutationCreateOneField = createMutationFieldBuilder({
+  modelName: 'Contact',
+  defaultMutationName: 'contactCreate',
+  defaultResolver: contactMutationCreateOneResolver,
+  inputBuilder: buildContactCreateInput,
+  defaultInputType: 'ContactCreateInput'
+})
+  
+const ContactUpdate = {
+  $name: 'ContactUpdateInput',
+  id: {
+    name: 'id',
+    type: nonNull('Int')
+  },
+  name: {
+    name: 'name',
+    type: nullable('String')
+  },
+  phone: {
+    name: 'phone',
+    type: nullable('String')
+  },
+  clientId: {
+    name: 'clientId',
+    type: nullable('Int')
+  }
+}
+  
+const buildContactUpdateInput = createInputTypeBuilder(ContactUpdate)
+  
+export const ContactUpdateInputType = buildContactUpdateInput()
+  
+const contactMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.ContactUpdateInput, PrismaLib.Contact>('Contact', ['id'])
+  
+const contactMutationUpdateOneField = createMutationFieldBuilder({
+  modelName: 'Contact',
+  defaultMutationName: 'contactUpdate',
+  defaultResolver: contactMutationUpdateOneResolver,
+  inputBuilder: buildContactUpdateInput,
+  defaultInputType: 'ContactUpdateInput'
+})
+  
+const contactMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
+  
+const contactMutationDeleteOneField = createMutationDeleteFieldBuilder({
+  modelName: 'Contact',
+  defaultMutationName: 'contactDelete',
+  defaultResolver: contactMutationDeleteOneResolver,
+  args: { id: nonNull(arg({ type: 'Int' })) }
+})
+  
+export const ContactCRUD = {
+  Where: ContactWhere,
+  whereInputType: buildContactWhereInput,
+  OrderBy: ContactOrderBy,
+  orderByInputType: buildContactOrderByInput,
+  queryOne: contactQueryOneField,
+  queryOneResolver: contactQueryOneResolver,
+  queryList: contactQueryListField,
+  queryListResolver: contactQueryListResolver,
+  Create: ContactCreate,
+  createInputType: buildContactCreateInput,
+  mutationCreate: contactMutationCreateOneField,
+  mutationCreateResolver: contactMutationCreateOneResolver,
+  Update: ContactUpdate,
+  updateInputType: buildContactUpdateInput,
+  mutationUpdate: contactMutationUpdateOneField,
+  mutationUpdateResolver: contactMutationUpdateOneResolver,
+  mutationDelete: contactMutationDeleteOneField,
+  mutationDeleteResolver: contactMutationDeleteOneResolver,
+}
+  
+export const generatedTypes = {
+  'SortDir': SortDirEnum,
+  'IDFilterInput': IDFilterInputType,
+  'StringFilterInput': StringFilterInputType,
+  'IntFilterInput': IntFilterInputType,
+  'FloatFilterInput': FloatFilterInputType,
+  'BooleanFilterInput': BooleanFilterInputType,
+  'DateTimeFilterInput': DateTimeFilterInputType,
+  'UserWhereInput': UserWhereInputType,
+  'UserOrderByInput': UserOrderByInputType,
+  'UserList': UserListType,
+  'UserCreateInput': UserCreateInputType,
+  'UserUpdateInput': UserUpdateInputType,
+  'ClientWhereInput': ClientWhereInputType,
+  'ClientOrderByInput': ClientOrderByInputType,
+  'ClientList': ClientListType,
+  'ClientCreateInput': ClientCreateInputType,
+  'ClientUpdateInput': ClientUpdateInputType,
+  'ContactWhereInput': ContactWhereInputType,
+  'ContactOrderByInput': ContactOrderByInputType,
+  'ContactList': ContactListType,
+  'ContactCreateInput': ContactCreateInputType,
+  'ContactUpdateInput': ContactUpdateInputType,
+}
+"
+`;
