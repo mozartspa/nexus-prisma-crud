@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { generatorHandler } from "@prisma/generator-helper"
-import fs from "fs"
 import path from "path"
 import { generateAndEmit } from "../generator"
 
@@ -23,10 +22,5 @@ generatorHandler({
     }
 
     await generateAndEmit(dmmf, outputPath, prismaClientPath)
-
-    fs.writeFileSync(
-      path.resolve(__dirname, "../runtime/dmmf.json"),
-      JSON.stringify(dmmf, null, 2)
-    )
   },
 })
