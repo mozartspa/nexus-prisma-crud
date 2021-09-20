@@ -2,7 +2,7 @@ import { GetGen } from "nexus/dist/typegenTypeHelpers"
 import { getPrismaClient, lowerFirst } from "./helpers"
 import { DeepNullable } from "./types"
 
-export function createListQueryResolver<TFindManyArgs, TModel>(
+export function createQueryListFieldResolver<TFindManyArgs, TModel>(
   modelName: string
 ) {
   const resolver = async (
