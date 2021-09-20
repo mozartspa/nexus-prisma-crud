@@ -31,6 +31,8 @@ export async function generateModules(
   const tsDeclaration = await readFile("./index.d.ts")
   const tsSource = await readFile("./index.ts")
 
+  fs.remove(dir)
+
   return {
     js,
     tsDeclaration,
