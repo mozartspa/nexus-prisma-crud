@@ -489,7 +489,13 @@ function generateUpdate(
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
+          const uniqueIdentifiers = resolveUniqueIdentifiers(model)
+            .map((name) => asString(name))
+            .join(",")
+
+          writer.writeLine(
+            `createInputTypeBuilder(${inputDefinition}, [${uniqueIdentifiers}])`
+          )
         },
       },
     ],
