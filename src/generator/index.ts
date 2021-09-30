@@ -2,6 +2,7 @@ import { DMMF } from "@prisma/generator-helper"
 import path from "path"
 import { Project, StructureKind } from "ts-morph"
 import { SemicolonPreference } from "typescript"
+import { generateEnum } from "./enum"
 import { generateFilters } from "./filters"
 import { generateGeneratedTypes } from "./generatedTypes"
 import { generateModel } from "./model"
@@ -26,7 +27,7 @@ export async function generateAndEmit(
   })
 
   const context = createGeneratorContext()
-  //const enums = dmmf.datamodel.enums
+  const enums = dmmf.datamodel.enums
   const models = dmmf.datamodel.models
 
   const sourceFile = project.createSourceFile(
@@ -76,6 +77,7 @@ export async function generateAndEmit(
 
   generateFilters(sourceFile, context)
   generateModelCommon(sourceFile, context)
+  enums.forEach((modelEnum) => generateEnum(sourceFile, modelEnum, context))
   models.forEach((model) => generateModel(sourceFile, model, context))
 
   // This must be the last generated thing

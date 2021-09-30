@@ -175,6 +175,14 @@ export function getFieldDefinitionsForWhere(
         break
       }
 
+      case "enum": {
+        type[field.name] = {
+          name: asString(field.name),
+          type: `nullable(${asString(`${field.type}EnumFilterInput`)})`,
+        }
+        break
+      }
+
       case "object": {
         if (field.isList) {
           // One-to-Many
