@@ -14,6 +14,10 @@ export async function generateAndEmit(
   prismaClientPath: string
 ) {
   const relativePrismaClientPath = path.relative(outputPath, prismaClientPath)
+  const relativeGenRuntimePath = path.relative(
+    outputPath,
+    path.join(__dirname, "./runtime")
+  )
 
   const project = new Project({
     skipAddingFilesFromTsConfig: true,
@@ -60,7 +64,7 @@ export async function generateAndEmit(
             "createMutationDeleteFieldBuilder",
             "createMutationDeleteFieldResolver",
           ],
-          moduleSpecifier: "../generator/runtime",
+          moduleSpecifier: relativeGenRuntimePath,
         },
         {
           kind: StructureKind.ImportDeclaration,

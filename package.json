@@ -8,6 +8,10 @@
   "files": [
     "dist"
   ],
+  "exports": {
+    ".": "./dist/entrypoints/main.js",
+    "./genruntime": "./dist/entrypoints/genruntime.js"
+  },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "bin": {
