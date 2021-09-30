@@ -127,14 +127,30 @@ export function getFieldDefinitionsForOrderBy(model: DMMF.Model) {
   let type = {} as Record<string, { name: string; type: string }>
 
   model.fields.forEach((field) => {
-    // Only scalar and enum supported
-    if (!(field.kind === "scalar" || field.kind === "enum")) {
-      return
-    }
+    switch (field.kind) {
+      case "scalar":
+      case "enum":
+        type[field.name] = {
+          name: asString(field.name),
+          type: asString("SortDir"),
+        }
+        break
 
-    type[field.name] = {
-      name: asString(field.name),
-      type: asString("SortDir"),
+      case "object":
+        if (field.isList) {
+          // One-to-Many
+          type[field.name] = {
+            name: asString(field.name),
+            type: asString("RelatedCountOrderByInput"),
+          }
+        } else {
+          // Many-to-One or One-to-One
+          type[field.name] = {
+            name: asString(field.name),
+            type: asString(`${field.type}OrderByInput`),
+          }
+        }
+        break
     }
   })
 

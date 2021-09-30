@@ -5,6 +5,7 @@ import { SemicolonPreference } from "typescript"
 import { generateFilters } from "./filters"
 import { generateGeneratedTypes } from "./generatedTypes"
 import { generateModel } from "./model"
+import { generateModelCommon } from "./model_common"
 import { GeneratorContext } from "./types"
 
 export async function generateAndEmit(
@@ -74,6 +75,7 @@ export async function generateAndEmit(
   )
 
   generateFilters(sourceFile, context)
+  generateModelCommon(sourceFile, context)
   models.forEach((model) => generateModel(sourceFile, model, context))
 
   // This must be the last generated thing
