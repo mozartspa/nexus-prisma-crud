@@ -91,6 +91,13 @@ export const DateTimeFilterInputType = inputObjectType({
   }
 })
   
+export const RelatedCountOrderByInputType = inputObjectType({
+  name: 'RelatedCountOrderByInput',
+  definition(t) {
+    t.field('_count', { type: 'SortDir' as any })
+  }
+})
+  
 const UserWhere = {
   $name: 'UserWhereInput',
   id: {
@@ -126,6 +133,15 @@ const UserWhere = {
 const buildUserWhereInput = createInputTypeBuilder(UserWhere)
   
 export const UserWhereInputType = buildUserWhereInput()
+  
+const UserListRelationWhereInputType = inputObjectType({
+  name: 'UserListRelationWhereInput',
+  definition(t) {
+    t.field('every', { type: 'UserWhereInput' as any })
+    t.field('some', { type: 'UserWhereInput' as any })
+    t.field('none', { type: 'UserWhereInput' as any })
+  }
+})
   
 const UserOrderBy = {
   $name: 'UserOrderByInput',
@@ -230,7 +246,7 @@ const UserUpdate = {
   }
 }
   
-const buildUserUpdateInput = createInputTypeBuilder(UserUpdate)
+const buildUserUpdateInput = createInputTypeBuilder(UserUpdate, ['id'])
   
 export const UserUpdateInputType = buildUserUpdateInput()
   
@@ -288,6 +304,10 @@ const ClientWhere = {
     name: 'age',
     type: nullable('IntFilterInput')
   },
+  contacts: {
+    name: 'contacts',
+    type: nullable('ContactListRelationWhereInput')
+  },
   AND: {
     name: 'AND',
     type: nullable(list('ClientWhereInput'))
@@ -306,6 +326,15 @@ const buildClientWhereInput = createInputTypeBuilder(ClientWhere)
   
 export const ClientWhereInputType = buildClientWhereInput()
   
+const ClientListRelationWhereInputType = inputObjectType({
+  name: 'ClientListRelationWhereInput',
+  definition(t) {
+    t.field('every', { type: 'ClientWhereInput' as any })
+    t.field('some', { type: 'ClientWhereInput' as any })
+    t.field('none', { type: 'ClientWhereInput' as any })
+  }
+})
+  
 const ClientOrderBy = {
   $name: 'ClientOrderByInput',
   id: {
@@ -319,6 +348,10 @@ const ClientOrderBy = {
   age: {
     name: 'age',
     type: 'SortDir'
+  },
+  contacts: {
+    name: 'contacts',
+    type: 'RelatedCountOrderByInput'
   }
 }
   
@@ -397,7 +430,7 @@ const ClientUpdate = {
   }
 }
   
-const buildClientUpdateInput = createInputTypeBuilder(ClientUpdate)
+const buildClientUpdateInput = createInputTypeBuilder(ClientUpdate, ['id'])
   
 export const ClientUpdateInputType = buildClientUpdateInput()
   
@@ -455,6 +488,10 @@ const ContactWhere = {
     name: 'phone',
     type: nullable('StringFilterInput')
   },
+  client: {
+    name: 'client',
+    type: nullable('ClientWhereInput')
+  },
   clientId: {
     name: 'clientId',
     type: nullable('IntFilterInput')
@@ -477,6 +514,15 @@ const buildContactWhereInput = createInputTypeBuilder(ContactWhere)
   
 export const ContactWhereInputType = buildContactWhereInput()
   
+const ContactListRelationWhereInputType = inputObjectType({
+  name: 'ContactListRelationWhereInput',
+  definition(t) {
+    t.field('every', { type: 'ContactWhereInput' as any })
+    t.field('some', { type: 'ContactWhereInput' as any })
+    t.field('none', { type: 'ContactWhereInput' as any })
+  }
+})
+  
 const ContactOrderBy = {
   $name: 'ContactOrderByInput',
   id: {
@@ -490,6 +536,10 @@ const ContactOrderBy = {
   phone: {
     name: 'phone',
     type: 'SortDir'
+  },
+  client: {
+    name: 'client',
+    type: 'ClientOrderByInput'
   },
   clientId: {
     name: 'clientId',
@@ -580,7 +630,7 @@ const ContactUpdate = {
   }
 }
   
-const buildContactUpdateInput = createInputTypeBuilder(ContactUpdate)
+const buildContactUpdateInput = createInputTypeBuilder(ContactUpdate, ['id'])
   
 export const ContactUpdateInputType = buildContactUpdateInput()
   
@@ -632,17 +682,21 @@ export const generatedTypes = {
   'FloatFilterInput': FloatFilterInputType,
   'BooleanFilterInput': BooleanFilterInputType,
   'DateTimeFilterInput': DateTimeFilterInputType,
+  'RelatedCountOrderByInput': RelatedCountOrderByInputType,
   'UserWhereInput': UserWhereInputType,
+  'UserListRelationWhereInput': UserListRelationWhereInputType,
   'UserOrderByInput': UserOrderByInputType,
   'UserList': UserListType,
   'UserCreateInput': UserCreateInputType,
   'UserUpdateInput': UserUpdateInputType,
   'ClientWhereInput': ClientWhereInputType,
+  'ClientListRelationWhereInput': ClientListRelationWhereInputType,
   'ClientOrderByInput': ClientOrderByInputType,
   'ClientList': ClientListType,
   'ClientCreateInput': ClientCreateInputType,
   'ClientUpdateInput': ClientUpdateInputType,
   'ContactWhereInput': ContactWhereInputType,
+  'ContactListRelationWhereInput': ContactListRelationWhereInputType,
   'ContactOrderByInput': ContactOrderByInputType,
   'ContactList': ContactListType,
   'ContactCreateInput': ContactCreateInputType,
