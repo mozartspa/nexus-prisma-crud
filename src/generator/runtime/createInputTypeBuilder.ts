@@ -9,7 +9,7 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
 ) {
   type Options = {
     name?: string
-    include?: Omit<InputDefinitionFieldSelector<T>, TDefaultIncluded>
+    include?: InputDefinitionFieldSelector<T>
     exclude?: InputDefinitionFieldSelector<T>
     extraDefinition?: (t: InputDefinitionBlock<string>) => void
   }
