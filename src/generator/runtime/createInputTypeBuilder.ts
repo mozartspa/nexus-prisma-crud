@@ -3,7 +3,10 @@ import { InputDefinitionBlock } from "nexus/dist/blocks"
 import { NexusInputObjectTypeConfig } from "nexus/dist/core"
 import { InputDefinition, InputDefinitionFieldSelector } from "./types"
 
-export function createInputTypeBuilder<T>(inputDef: InputDefinition<T>) {
+export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
+  inputDef: InputDefinition<T>,
+  defaultIncluded?: TDefaultIncluded[]
+) {
   type Options = {
     name?: string
     include?: InputDefinitionFieldSelector<T>
@@ -23,14 +26,26 @@ export function createInputTypeBuilder<T>(inputDef: InputDefinition<T>) {
       ...rest
     } = options
 
+    const shouldAddKey = (key: string) => {
+      // Check exclude
+      if (exclude && (exclude as any)[key]) {
+        return false
+      }
+
+      // If default included, it must be included
+      if (defaultIncluded && defaultIncluded.includes(key as any)) {
+        return true
+      }
+
+      // Check include
+      return !include || (include as any)[key]
+    }
+
     return inputObjectType({
       name,
       definition(t) {
         for (const key in inputDef) {
-          if (
-            (!include || (include as any)[key]) &&
-            (!exclude || !(exclude as any)[key])
-          ) {
+          if (shouldAddKey(key)) {
             const field = inputDef[key as keyof typeof inputDef]
             if (typeof field !== "string" && field.type) {
               t.field(field as any)

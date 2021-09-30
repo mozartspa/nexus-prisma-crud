@@ -20,6 +20,9 @@ function getNameMappings(model: DMMF.Model) {
       inputType: `${model.name}WhereInput`,
       inputBuilder: `build${model.name}WhereInput`,
     },
+    whereListRelation: {
+      inputType: `${model.name}ListRelationWhereInput`,
+    },
     orderBy: {
       inputDefinition: `${model.name}OrderBy`,
       inputType: `${model.name}OrderByInput`,
@@ -61,6 +64,7 @@ export function generateModel(
   context: GeneratorContext
 ) {
   generateWhere(sourceFile, model, context)
+  generateWhereListRelation(sourceFile, model, context)
   generateOrderBy(sourceFile, model, context)
   generateQueryOne(sourceFile, model, context)
   generateQueryList(sourceFile, model, context)
@@ -121,6 +125,51 @@ function generateWhere(
         name: `${inputType}Type`,
         initializer(writer) {
           writer.writeLine(`${inputBuilder}()`)
+        },
+      },
+    ],
+  })
+}
+
+function generateWhereListRelation(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  context: GeneratorContext
+) {
+  const { where, whereListRelation } = getNameMappings(model)
+
+  const inputType = whereListRelation.inputType
+  const whereInputType = where.inputType
+
+  // Input type
+  context.addType(inputType, `${inputType}Type`)
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${inputType}Type`,
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: '${inputType}',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(
+                  `t.field('every', { type: '${whereInputType}' as any })`
+                )
+                writer.writeLine(
+                  `t.field('some', { type: '${whereInputType}' as any })`
+                )
+                writer.writeLine(
+                  `t.field('none', { type: '${whereInputType}' as any })`
+                )
+              })
+            })
+            .write(")")
+            .newLine()
         },
       },
     ],
@@ -440,7 +489,13 @@ function generateUpdate(
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
+          const uniqueIdentifiers = resolveUniqueIdentifiers(model)
+            .map((name) => asString(name))
+            .join(",")
+
+          writer.writeLine(
+            `createInputTypeBuilder(${inputDefinition}, [${uniqueIdentifiers}])`
+          )
         },
       },
     ],

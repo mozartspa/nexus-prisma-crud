@@ -127,14 +127,31 @@ export function getFieldDefinitionsForOrderBy(model: DMMF.Model) {
   let type = {} as Record<string, { name: string; type: string }>
 
   model.fields.forEach((field) => {
-    // Only scalar and enum supported
-    if (!(field.kind === "scalar" || field.kind === "enum")) {
-      return
-    }
+    switch (field.kind) {
+      case "scalar":
+      case "enum":
+        type[field.name] = {
+          name: asString(field.name),
+          type: asString("SortDir"),
+        }
+        break
 
-    type[field.name] = {
-      name: asString(field.name),
-      type: asString("SortDir"),
+      case "object":
+        if (field.isList) {
+          // One-to-Many
+          type[field.name] = {
+            name: asString(field.name),
+            type: asString("RelatedCountOrderByInput"),
+          }
+        } else {
+          // Many-to-One or One-to-One
+          // TODO: type name is hardcoded, should depend on name mapping
+          type[field.name] = {
+            name: asString(field.name),
+            type: asString(`${field.type}OrderByInput`),
+          }
+        }
+        break
     }
   })
 
@@ -148,16 +165,44 @@ export function getFieldDefinitionsForWhere(
   let type = {} as Record<string, { name: string; type: string }>
 
   model.fields.forEach((field) => {
-    // Only scalar supported
-    if (!(field.kind === "scalar")) {
-      return
-    }
+    switch (field.kind) {
+      case "scalar": {
+        const graphqlType = fieldTypeToGraphQLType(field)
+        type[field.name] = {
+          name: asString(field.name),
+          type: `nullable(${asString(`${graphqlType}FilterInput`)})`,
+        }
+        break
+      }
 
-    const graphqlType = fieldTypeToGraphQLType(field)
+      case "enum": {
+        type[field.name] = {
+          name: asString(field.name),
+          type: `nullable(${asString(`${field.type}EnumFilterInput`)})`,
+        }
+        break
+      }
 
-    type[field.name] = {
-      name: asString(field.name),
-      type: `nullable(${asString(`${graphqlType}FilterInput`)})`,
+      case "object": {
+        if (field.isList) {
+          // One-to-Many
+          // TODO: type name is hardcoded, should depend on name mapping
+          type[field.name] = {
+            name: asString(field.name),
+            type: `nullable(${asString(
+              `${field.type}ListRelationWhereInput`
+            )})`,
+          }
+        } else {
+          // Many-to-One or One-to-One
+          // TODO: type name is hardcoded, should depend on name mapping
+          type[field.name] = {
+            name: asString(field.name),
+            type: `nullable(${asString(`${field.type}WhereInput`)})`,
+          }
+        }
+        break
+      }
     }
   })
 
