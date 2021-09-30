@@ -1,6 +1,6 @@
 {
   "name": "nexus-prisma-crud",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Nexus plugin to create quickly a CRUD API using Prisma as client.",
   "publishConfig": {
     "access": "public"
