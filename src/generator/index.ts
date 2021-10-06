@@ -60,6 +60,7 @@ export async function generateAndEmit(
             "createMutationFieldBuilder",
             "createMutationDeleteFieldBuilder",
             "createMutationDeleteFieldResolver",
+            "DeepNullable",
           ],
           moduleSpecifier: "../generator/runtime",
         },

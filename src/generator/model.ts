@@ -424,7 +424,7 @@ function generateCreate(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateInput, PrismaLib.${model.name}>('${model.name}')`
+            `createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateArgs["data"], PrismaLib.${model.name}>('${model.name}')`
           )
         },
       },
@@ -517,6 +517,28 @@ function generateUpdate(
   })
 
   // Resolver
+
+  const uniqueIdentifiers = resolveUniqueIdentifiers(model).map((name) =>
+    asString(name)
+  )
+  const prismaUpdateData = `PrismaLib.Prisma.${model.name}UpdateArgs["data"]`
+
+  sourceFile.addTypeAlias({
+    name: `${model.name}IdType`,
+    type(writer) {
+      writer.writeLine(
+        `Pick<PrismaLib.${model.name}, ${uniqueIdentifiers.join(" | ")}>`
+      )
+    },
+  })
+  sourceFile.addTypeAlias({
+    name: `${model.name}UpdateDataType`,
+    type(writer) {
+      writer.writeLine(
+        `DeepNullable<Omit<${prismaUpdateData}, keyof ${model.name}IdType>> & ${model.name}IdType`
+      )
+    },
+  })
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
     isExported: false,
@@ -524,11 +546,12 @@ function generateUpdate(
       {
         name: `${builder}Resolver`,
         initializer(writer) {
-          const uniqueIdentifiers = resolveUniqueIdentifiers(model)
-            .map((name) => asString(name))
-            .join(",")
           writer.writeLine(
-            `createUpdateMutationResolver<PrismaLib.Prisma.${model.name}UpdateInput, PrismaLib.${model.name}>('${model.name}', [${uniqueIdentifiers}])`
+            `createUpdateMutationResolver<${
+              model.name
+            }UpdateDataType, PrismaLib.${model.name}>('${
+              model.name
+            }', [${uniqueIdentifiers.join(",")}])`
           )
         },
       },
