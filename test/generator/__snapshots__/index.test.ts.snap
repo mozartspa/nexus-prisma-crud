@@ -2,7 +2,7 @@
 
 exports[`can generate module with models and relations 1`] = `
 "import { enumType, inputObjectType, objectType, list, nonNull, nullable, arg } from \\"nexus\\"
-import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver } from \\"../generator/runtime\\"
+import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver, DeepNullable } from \\"../generator/runtime\\"
 import * as PrismaLib from \\"../client\\"
 
 export const SortDirEnum = enumType({
@@ -216,7 +216,7 @@ const buildUserCreateInput = createInputTypeBuilder(UserCreate)
   
 export const UserCreateInputType = buildUserCreateInput()
   
-const userMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.UserCreateInput, PrismaLib.User>('User')
+const userMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.UserCreateArgs[\\"data\\"], PrismaLib.User>('User')
   
 const userMutationCreateOneField = createMutationFieldBuilder({
   modelName: 'User',
@@ -250,7 +250,11 @@ const buildUserUpdateInput = createInputTypeBuilder(UserUpdate, ['id'])
   
 export const UserUpdateInputType = buildUserUpdateInput()
   
-const userMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.UserUpdateInput, PrismaLib.User>('User', ['id'])
+
+type UserUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.UserUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.User, 'id'>
+  
+
+const userMutationUpdateOneResolver = createUpdateMutationResolver<UserUpdateDataType, PrismaLib.User>('User', ['id'])
   
 const userMutationUpdateOneField = createMutationFieldBuilder({
   modelName: 'User',
@@ -404,7 +408,7 @@ const buildClientCreateInput = createInputTypeBuilder(ClientCreate)
   
 export const ClientCreateInputType = buildClientCreateInput()
   
-const clientMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ClientCreateInput, PrismaLib.Client>('Client')
+const clientMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ClientCreateArgs[\\"data\\"], PrismaLib.Client>('Client')
   
 const clientMutationCreateOneField = createMutationFieldBuilder({
   modelName: 'Client',
@@ -434,7 +438,11 @@ const buildClientUpdateInput = createInputTypeBuilder(ClientUpdate, ['id'])
   
 export const ClientUpdateInputType = buildClientUpdateInput()
   
-const clientMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.ClientUpdateInput, PrismaLib.Client>('Client', ['id'])
+
+type ClientUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.ClientUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Client, 'id'>
+  
+
+const clientMutationUpdateOneResolver = createUpdateMutationResolver<ClientUpdateDataType, PrismaLib.Client>('Client', ['id'])
   
 const clientMutationUpdateOneField = createMutationFieldBuilder({
   modelName: 'Client',
@@ -600,7 +608,7 @@ const buildContactCreateInput = createInputTypeBuilder(ContactCreate)
   
 export const ContactCreateInputType = buildContactCreateInput()
   
-const contactMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ContactCreateInput, PrismaLib.Contact>('Contact')
+const contactMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ContactCreateArgs[\\"data\\"], PrismaLib.Contact>('Contact')
   
 const contactMutationCreateOneField = createMutationFieldBuilder({
   modelName: 'Contact',
@@ -634,7 +642,11 @@ const buildContactUpdateInput = createInputTypeBuilder(ContactUpdate, ['id'])
   
 export const ContactUpdateInputType = buildContactUpdateInput()
   
-const contactMutationUpdateOneResolver = createUpdateMutationResolver<PrismaLib.Prisma.ContactUpdateInput, PrismaLib.Contact>('Contact', ['id'])
+
+type ContactUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.ContactUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Contact, 'id'>
+  
+
+const contactMutationUpdateOneResolver = createUpdateMutationResolver<ContactUpdateDataType, PrismaLib.Contact>('Contact', ['id'])
   
 const contactMutationUpdateOneField = createMutationFieldBuilder({
   modelName: 'Contact',
