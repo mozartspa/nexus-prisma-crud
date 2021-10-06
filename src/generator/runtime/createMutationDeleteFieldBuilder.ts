@@ -1,4 +1,4 @@
-import { FieldResolver } from "nexus"
+import { FieldResolver, nonNull } from "nexus"
 import { ArgsRecord, NexusOutputFieldConfig } from "nexus/dist/core"
 
 export type CreateMutationDeleteFieldBuilderOptions<
@@ -26,7 +26,7 @@ export function createMutationDeleteFieldBuilder<
   TModelName extends string,
   TMutationName extends string
 >(options: CreateMutationDeleteFieldBuilderOptions<TModelName, TMutationName>) {
-  const { modelName, defaultMutationName, defaultResolver, args } = options
+  const { defaultMutationName, defaultResolver, args } = options
 
   return <MutationName extends string = TMutationName>(
     options: BuilderOptions<MutationName> = {}
@@ -39,7 +39,7 @@ export function createMutationDeleteFieldBuilder<
 
     return {
       name,
-      type: modelName,
+      type: nonNull("Boolean"),
       args,
       resolve,
       ...rest,

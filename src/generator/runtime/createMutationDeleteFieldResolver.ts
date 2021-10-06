@@ -11,9 +11,20 @@ export function createMutationDeleteFieldResolver<TModel, TArgs>(
 
     const deleteFunc = prismaModel.delete as (query: unknown) => Promise<TModel>
 
-    return await deleteFunc({
-      where: args,
-    })
+    try {
+      await deleteFunc({
+        where: args,
+      })
+      return true
+    } catch (err: any) {
+      // In case the error was P2025 (that is because the record does not exist anymore)
+      // we return false, otherwise we throw the error.
+      if (err.code === "P2025") {
+        return false
+      } else {
+        throw err
+      }
+    }
   }
 
   return resolver
