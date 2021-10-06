@@ -524,18 +524,12 @@ function generateUpdate(
   const prismaUpdateData = `PrismaLib.Prisma.${model.name}UpdateArgs["data"]`
 
   sourceFile.addTypeAlias({
-    name: `${model.name}IdType`,
-    type(writer) {
-      writer.writeLine(
-        `Pick<PrismaLib.${model.name}, ${uniqueIdentifiers.join(" | ")}>`
-      )
-    },
-  })
-  sourceFile.addTypeAlias({
     name: `${model.name}UpdateDataType`,
     type(writer) {
       writer.writeLine(
-        `DeepNullable<Omit<${prismaUpdateData}, keyof ${model.name}IdType>> & ${model.name}IdType`
+        `DeepNullable<Omit<${prismaUpdateData}, ${uniqueIdentifiers.join(
+          " | "
+        )}>> & Pick<PrismaLib.${model.name}, ${uniqueIdentifiers.join(" | ")}>`
       )
     },
   })
