@@ -28,14 +28,14 @@ export function renderFieldAsArg(field: DMMF.Field): string {
 
   if (field.isList) {
     if (field.isRequired) {
-      return `nonNull(list(nonNull(arg({ type: '${graphqlType}' }))))`
+      return `nonNull(list(nonNull(arg({ type: '${graphqlType}' as any }))))`
     } else {
-      return `list(nonNull(arg({ type: '${graphqlType}' })))`
+      return `list(nonNull(arg({ type: '${graphqlType}' as any })))`
     }
   } else if (field.isRequired) {
-    return `nonNull(arg({ type: '${graphqlType}' }))`
+    return `nonNull(arg({ type: '${graphqlType}' as any }))`
   } else {
-    return `nullable(arg({ type: '${graphqlType}' }))`
+    return `nullable(arg({ type: '${graphqlType}' as any }))`
   }
 }
 
@@ -51,14 +51,14 @@ export function renderFieldAsNexusType(
 
   if (field.isList) {
     if (isRequired) {
-      return `nonNull(list(nonNull('${graphqlType}')))`
+      return `nonNull(list(nonNull('${graphqlType}' as any)))`
     } else {
-      return `list(nonNull('${graphqlType}'))`
+      return `list(nonNull('${graphqlType}' as any))`
     }
   } else if (isRequired) {
-    return `nonNull('${graphqlType}')`
+    return `nonNull('${graphqlType}' as any)`
   } else {
-    return `nullable('${graphqlType}')`
+    return `nullable('${graphqlType}' as any)`
   }
 }
 
@@ -170,7 +170,7 @@ export function getFieldDefinitionsForWhere(
         const graphqlType = fieldTypeToGraphQLType(field)
         type[field.name] = {
           name: asString(field.name),
-          type: `nullable(${asString(`${graphqlType}FilterInput`)})`,
+          type: `nullable(${asString(`${graphqlType}FilterInput`)} as any)`,
         }
         break
       }
@@ -178,7 +178,7 @@ export function getFieldDefinitionsForWhere(
       case "enum": {
         type[field.name] = {
           name: asString(field.name),
-          type: `nullable(${asString(`${field.type}EnumFilterInput`)})`,
+          type: `nullable(${asString(`${field.type}EnumFilterInput`)} as any)`,
         }
         break
       }
@@ -191,14 +191,14 @@ export function getFieldDefinitionsForWhere(
             name: asString(field.name),
             type: `nullable(${asString(
               `${field.type}ListRelationWhereInput`
-            )})`,
+            )} as any)`,
           }
         } else {
           // Many-to-One or One-to-One
           // TODO: type name is hardcoded, should depend on name mapping
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asString(`${field.type}WhereInput`)})`,
+            type: `nullable(${asString(`${field.type}WhereInput`)} as any)`,
           }
         }
         break
@@ -208,17 +208,17 @@ export function getFieldDefinitionsForWhere(
 
   type["AND"] = {
     name: asString("AND"),
-    type: `nullable(list('${inputTypeName}'))`,
+    type: `nullable(list('${inputTypeName}' as any))`,
   }
 
   type["OR"] = {
     name: asString("OR"),
-    type: `nullable(list('${inputTypeName}'))`,
+    type: `nullable(list('${inputTypeName}' as any))`,
   }
 
   type["NOT"] = {
     name: asString("NOT"),
-    type: `nullable(list('${inputTypeName}'))`,
+    type: `nullable(list('${inputTypeName}' as any))`,
   }
 
   return type
