@@ -102,31 +102,31 @@ const UserWhere = {
   $name: 'UserWhereInput',
   id: {
     name: 'id',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   username: {
     name: 'username',
-    type: nullable('StringFilterInput')
+    type: nullable('StringFilterInput' as any)
   },
   name: {
     name: 'name',
-    type: nullable('StringFilterInput')
+    type: nullable('StringFilterInput' as any)
   },
   age: {
     name: 'age',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   AND: {
     name: 'AND',
-    type: nullable(list('UserWhereInput'))
+    type: nullable(list('UserWhereInput' as any))
   },
   OR: {
     name: 'OR',
-    type: nullable(list('UserWhereInput'))
+    type: nullable(list('UserWhereInput' as any))
   },
   NOT: {
     name: 'NOT',
-    type: nullable(list('UserWhereInput'))
+    type: nullable(list('UserWhereInput' as any))
   }
 }
   
@@ -173,7 +173,7 @@ const userQueryOneField = createQueryOneFieldBuilder({
   modelName: 'User',
   defaultQueryName: 'user',
   defaultResolver: userQueryOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const UserListType = objectType({
@@ -200,15 +200,15 @@ const UserCreate = {
   $name: 'UserCreateInput',
   username: {
     name: 'username',
-    type: nonNull('String')
+    type: nonNull('String' as any)
   },
   name: {
     name: 'name',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   age: {
     name: 'age',
-    type: nullable('Int')
+    type: nullable('Int' as any)
   }
 }
   
@@ -230,19 +230,19 @@ const UserUpdate = {
   $name: 'UserUpdateInput',
   id: {
     name: 'id',
-    type: nonNull('Int')
+    type: nonNull('Int' as any)
   },
   username: {
     name: 'username',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   name: {
     name: 'name',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   age: {
     name: 'age',
-    type: nullable('Int')
+    type: nullable('Int' as any)
   }
 }
   
@@ -270,7 +270,7 @@ const userMutationDeleteOneField = createMutationDeleteFieldBuilder({
   modelName: 'User',
   defaultMutationName: 'userDelete',
   defaultResolver: userMutationDeleteOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const UserCRUD = {
@@ -298,31 +298,31 @@ const ClientWhere = {
   $name: 'ClientWhereInput',
   id: {
     name: 'id',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   name: {
     name: 'name',
-    type: nullable('StringFilterInput')
+    type: nullable('StringFilterInput' as any)
   },
   age: {
     name: 'age',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   contacts: {
     name: 'contacts',
-    type: nullable('ContactListRelationWhereInput')
+    type: nullable('ContactListRelationWhereInput' as any)
   },
   AND: {
     name: 'AND',
-    type: nullable(list('ClientWhereInput'))
+    type: nullable(list('ClientWhereInput' as any))
   },
   OR: {
     name: 'OR',
-    type: nullable(list('ClientWhereInput'))
+    type: nullable(list('ClientWhereInput' as any))
   },
   NOT: {
     name: 'NOT',
-    type: nullable(list('ClientWhereInput'))
+    type: nullable(list('ClientWhereInput' as any))
   }
 }
   
@@ -369,7 +369,7 @@ const clientQueryOneField = createQueryOneFieldBuilder({
   modelName: 'Client',
   defaultQueryName: 'client',
   defaultResolver: clientQueryOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const ClientListType = objectType({
@@ -396,11 +396,11 @@ const ClientCreate = {
   $name: 'ClientCreateInput',
   name: {
     name: 'name',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   age: {
     name: 'age',
-    type: nullable('Int')
+    type: nullable('Int' as any)
   }
 }
   
@@ -422,15 +422,15 @@ const ClientUpdate = {
   $name: 'ClientUpdateInput',
   id: {
     name: 'id',
-    type: nonNull('Int')
+    type: nonNull('Int' as any)
   },
   name: {
     name: 'name',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   age: {
     name: 'age',
-    type: nullable('Int')
+    type: nullable('Int' as any)
   }
 }
   
@@ -458,7 +458,7 @@ const clientMutationDeleteOneField = createMutationDeleteFieldBuilder({
   modelName: 'Client',
   defaultMutationName: 'clientDelete',
   defaultResolver: clientMutationDeleteOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const ClientCRUD = {
@@ -486,35 +486,35 @@ const ContactWhere = {
   $name: 'ContactWhereInput',
   id: {
     name: 'id',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   name: {
     name: 'name',
-    type: nullable('StringFilterInput')
+    type: nullable('StringFilterInput' as any)
   },
   phone: {
     name: 'phone',
-    type: nullable('StringFilterInput')
+    type: nullable('StringFilterInput' as any)
   },
   client: {
     name: 'client',
-    type: nullable('ClientWhereInput')
+    type: nullable('ClientWhereInput' as any)
   },
   clientId: {
     name: 'clientId',
-    type: nullable('IntFilterInput')
+    type: nullable('IntFilterInput' as any)
   },
   AND: {
     name: 'AND',
-    type: nullable(list('ContactWhereInput'))
+    type: nullable(list('ContactWhereInput' as any))
   },
   OR: {
     name: 'OR',
-    type: nullable(list('ContactWhereInput'))
+    type: nullable(list('ContactWhereInput' as any))
   },
   NOT: {
     name: 'NOT',
-    type: nullable(list('ContactWhereInput'))
+    type: nullable(list('ContactWhereInput' as any))
   }
 }
   
@@ -565,7 +565,7 @@ const contactQueryOneField = createQueryOneFieldBuilder({
   modelName: 'Contact',
   defaultQueryName: 'contact',
   defaultResolver: contactQueryOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const ContactListType = objectType({
@@ -592,15 +592,15 @@ const ContactCreate = {
   $name: 'ContactCreateInput',
   name: {
     name: 'name',
-    type: nonNull('String')
+    type: nonNull('String' as any)
   },
   phone: {
     name: 'phone',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   clientId: {
     name: 'clientId',
-    type: nonNull('Int')
+    type: nonNull('Int' as any)
   }
 }
   
@@ -622,19 +622,19 @@ const ContactUpdate = {
   $name: 'ContactUpdateInput',
   id: {
     name: 'id',
-    type: nonNull('Int')
+    type: nonNull('Int' as any)
   },
   name: {
     name: 'name',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   phone: {
     name: 'phone',
-    type: nullable('String')
+    type: nullable('String' as any)
   },
   clientId: {
     name: 'clientId',
-    type: nullable('Int')
+    type: nullable('Int' as any)
   }
 }
   
@@ -662,7 +662,7 @@ const contactMutationDeleteOneField = createMutationDeleteFieldBuilder({
   modelName: 'Contact',
   defaultMutationName: 'contactDelete',
   defaultResolver: contactMutationDeleteOneResolver,
-  args: { id: nonNull(arg({ type: 'Int' })) }
+  args: { id: nonNull(arg({ type: 'Int' as any })) }
 })
   
 export const ContactCRUD = {
