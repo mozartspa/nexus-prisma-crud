@@ -74,6 +74,61 @@ export function renderUniqueIdentifiersAsArgs(model: DMMF.Model): string {
   return renderObject(type)
 }
 
+function renderRelationFieldAsPrismaType(
+  field: DMMF.Field,
+  options: {
+    isRequired?: boolean
+  } = {}
+) {
+  if (field.kind !== "object") {
+    throw new Error(
+      `Expected a relation field, received "${field.kind}". Field name is "${field.name}".`
+    )
+  }
+
+  const isRequired = options.isRequired ?? field.isRequired
+  const prismaType = `PrismaLib.${field.type}`
+
+  if (field.isList) {
+    return `${prismaType}[]`
+  } else if (isRequired) {
+    return `${prismaType}`
+  } else {
+    return `${prismaType} | null`
+  }
+}
+
+export function getFieldDefinitionsForModel(model: DMMF.Model) {
+  let type = {} as Record<
+    string,
+    { name: string; type: string; resolve?: string }
+  >
+
+  model.fields.forEach((field) => {
+    type[field.name] = {
+      name: asString(field.name),
+      type: renderFieldAsNexusType(field),
+    }
+
+    // Relation field
+    if (field.kind === "object") {
+      const TRootModel = `PrismaLib.${model.name}`
+      const TOutput = renderRelationFieldAsPrismaType(field)
+      const modelName = asString(model.name)
+      const relFieldName = asString(field.name)
+      const uniqueIdentifiers = resolveUniqueIdentifiers(model)
+        .map((id) => asString(id))
+        .join(", ")
+
+      const resolve = `createRelationFieldResolver<${TRootModel}, ${TOutput}>(${modelName}, ${relFieldName}, [${uniqueIdentifiers}])`
+
+      type[field.name].resolve = resolve
+    }
+  })
+
+  return type
+}
+
 export function getFieldDefinitionsForCreate(model: DMMF.Model) {
   let type = {} as Record<string, { name: string; type: string }>
 

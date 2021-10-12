@@ -1,4 +1,5 @@
 import { DMMF } from "@prisma/generator-helper"
+import { RecordUnknown } from "../types"
 
 /**
  * Taken from: https://github.com/prisma/nexus-prisma/blob/main/src/generator/helpers/constraints.ts
@@ -54,4 +55,31 @@ export function resolveUniqueIdentifierFields(model: DMMF.Model): DMMF.Field[] {
     }
     return field
   })
+}
+
+export function buildWhereUniqueInput(
+  data: RecordUnknown,
+  uniqueIdentifiers: string[]
+): RecordUnknown {
+  if (uniqueIdentifiers.length === 1) {
+    return pickFromRecord(data, uniqueIdentifiers)
+  }
+
+  const compoundName = uniqueIdentifiers.join("_")
+
+  return {
+    [compoundName]: pickFromRecord(data, uniqueIdentifiers),
+  }
+}
+
+function pickFromRecord(record: RecordUnknown, keys: string[]) {
+  const output: Record<string, unknown> = {}
+
+  for (const identifier of keys) {
+    if (record[identifier]) {
+      output[identifier] = record[identifier]
+    }
+  }
+
+  return output
 }
