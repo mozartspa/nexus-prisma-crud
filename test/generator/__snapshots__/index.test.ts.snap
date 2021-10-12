@@ -2,7 +2,7 @@
 
 exports[`can generate module with models and relations 1`] = `
 "import { enumType, inputObjectType, objectType, list, nonNull, nullable, arg } from \\"nexus\\"
-import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver, createRelationFieldResolver, DeepNullable } from \\"../generator/runtime\\"
+import * as NPCLib from \\"../generator/runtime\\"
 import * as PrismaLib from \\"../client\\"
 
 export const SortDirEnum = enumType({
@@ -150,7 +150,7 @@ const UserWhere = {
   }
 }
   
-const buildUserWhereInput = createInputTypeBuilder(UserWhere)
+const buildUserWhereInput = NPCLib.createInputTypeBuilder(UserWhere)
   
 export const UserWhereInputType = buildUserWhereInput()
   
@@ -183,13 +183,13 @@ const UserOrderBy = {
   }
 }
   
-const buildUserOrderByInput = createInputTypeBuilder(UserOrderBy)
+const buildUserOrderByInput = NPCLib.createInputTypeBuilder(UserOrderBy)
   
 export const UserOrderByInputType = buildUserOrderByInput()
   
-const userQueryOneResolver = createQueryOneFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
+const userQueryOneResolver = NPCLib.createQueryOneFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
   
-const userQueryOneField = createQueryOneFieldBuilder({
+const userQueryOneField = NPCLib.createQueryOneFieldBuilder({
   modelName: 'User',
   defaultQueryName: 'user',
   defaultResolver: userQueryOneResolver,
@@ -204,9 +204,9 @@ export const UserListType = objectType({
   }
 })
   
-const userQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.UserFindManyArgs, PrismaLib.User>('User')
+const userQueryListResolver = NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.UserFindManyArgs, PrismaLib.User>('User')
   
-const userQueryListField = createQueryListFieldBuilder({
+const userQueryListField = NPCLib.createQueryListFieldBuilder({
   outputTypeName: 'UserList',
   defaultQueryName: 'userList',
   defaultResolver: userQueryListResolver,
@@ -232,13 +232,13 @@ const UserCreate = {
   }
 }
   
-const buildUserCreateInput = createInputTypeBuilder(UserCreate)
+const buildUserCreateInput = NPCLib.createInputTypeBuilder(UserCreate)
   
 export const UserCreateInputType = buildUserCreateInput()
   
-const userMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.UserCreateArgs[\\"data\\"], PrismaLib.User>('User')
+const userMutationCreateOneResolver = NPCLib.createCreateMutationResolver<PrismaLib.Prisma.UserCreateArgs[\\"data\\"], PrismaLib.User>('User')
   
-const userMutationCreateOneField = createMutationFieldBuilder({
+const userMutationCreateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'User',
   defaultMutationName: 'userCreate',
   defaultResolver: userMutationCreateOneResolver,
@@ -266,17 +266,17 @@ const UserUpdate = {
   }
 }
   
-const buildUserUpdateInput = createInputTypeBuilder(UserUpdate, ['id'])
+const buildUserUpdateInput = NPCLib.createInputTypeBuilder(UserUpdate, ['id'])
   
 export const UserUpdateInputType = buildUserUpdateInput()
   
 
-type UserUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.UserUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.User, 'id'>
+type UserUpdateDataType = NPCLib.DeepNullable<Omit<PrismaLib.Prisma.UserUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.User, 'id'>
   
 
-const userMutationUpdateOneResolver = createUpdateMutationResolver<UserUpdateDataType, PrismaLib.User>('User', ['id'])
+const userMutationUpdateOneResolver = NPCLib.createUpdateMutationResolver<UserUpdateDataType, PrismaLib.User>('User', ['id'])
   
-const userMutationUpdateOneField = createMutationFieldBuilder({
+const userMutationUpdateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'User',
   defaultMutationName: 'userUpdate',
   defaultResolver: userMutationUpdateOneResolver,
@@ -284,9 +284,9 @@ const userMutationUpdateOneField = createMutationFieldBuilder({
   defaultInputType: 'UserUpdateInput'
 })
   
-const userMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
+const userMutationDeleteOneResolver = NPCLib.createMutationDeleteFieldResolver<PrismaLib.User, { id: PrismaLib.User[\\"id\\"] }>('User')
   
-const userMutationDeleteOneField = createMutationDeleteFieldBuilder({
+const userMutationDeleteOneField = NPCLib.createMutationDeleteFieldBuilder({
   modelName: 'User',
   defaultMutationName: 'userDelete',
   defaultResolver: userMutationDeleteOneResolver,
@@ -332,7 +332,7 @@ const ClientModel = {
   contacts: {
     name: 'contacts',
     type: nonNull(list(nonNull('Contact' as any))),
-    resolve: createRelationFieldResolver<PrismaLib.Client, PrismaLib.Contact[]>('Client', 'contacts', ['id'])
+    resolve: NPCLib.createRelationFieldResolver<PrismaLib.Client, PrismaLib.Contact[]>('Client', 'contacts', ['id'])
   }
 }
   
@@ -368,7 +368,7 @@ const ClientWhere = {
   }
 }
   
-const buildClientWhereInput = createInputTypeBuilder(ClientWhere)
+const buildClientWhereInput = NPCLib.createInputTypeBuilder(ClientWhere)
   
 export const ClientWhereInputType = buildClientWhereInput()
   
@@ -401,13 +401,13 @@ const ClientOrderBy = {
   }
 }
   
-const buildClientOrderByInput = createInputTypeBuilder(ClientOrderBy)
+const buildClientOrderByInput = NPCLib.createInputTypeBuilder(ClientOrderBy)
   
 export const ClientOrderByInputType = buildClientOrderByInput()
   
-const clientQueryOneResolver = createQueryOneFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
+const clientQueryOneResolver = NPCLib.createQueryOneFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
   
-const clientQueryOneField = createQueryOneFieldBuilder({
+const clientQueryOneField = NPCLib.createQueryOneFieldBuilder({
   modelName: 'Client',
   defaultQueryName: 'client',
   defaultResolver: clientQueryOneResolver,
@@ -422,9 +422,9 @@ export const ClientListType = objectType({
   }
 })
   
-const clientQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.ClientFindManyArgs, PrismaLib.Client>('Client')
+const clientQueryListResolver = NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.ClientFindManyArgs, PrismaLib.Client>('Client')
   
-const clientQueryListField = createQueryListFieldBuilder({
+const clientQueryListField = NPCLib.createQueryListFieldBuilder({
   outputTypeName: 'ClientList',
   defaultQueryName: 'clientList',
   defaultResolver: clientQueryListResolver,
@@ -446,13 +446,13 @@ const ClientCreate = {
   }
 }
   
-const buildClientCreateInput = createInputTypeBuilder(ClientCreate)
+const buildClientCreateInput = NPCLib.createInputTypeBuilder(ClientCreate)
   
 export const ClientCreateInputType = buildClientCreateInput()
   
-const clientMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ClientCreateArgs[\\"data\\"], PrismaLib.Client>('Client')
+const clientMutationCreateOneResolver = NPCLib.createCreateMutationResolver<PrismaLib.Prisma.ClientCreateArgs[\\"data\\"], PrismaLib.Client>('Client')
   
-const clientMutationCreateOneField = createMutationFieldBuilder({
+const clientMutationCreateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'Client',
   defaultMutationName: 'clientCreate',
   defaultResolver: clientMutationCreateOneResolver,
@@ -476,17 +476,17 @@ const ClientUpdate = {
   }
 }
   
-const buildClientUpdateInput = createInputTypeBuilder(ClientUpdate, ['id'])
+const buildClientUpdateInput = NPCLib.createInputTypeBuilder(ClientUpdate, ['id'])
   
 export const ClientUpdateInputType = buildClientUpdateInput()
   
 
-type ClientUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.ClientUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Client, 'id'>
+type ClientUpdateDataType = NPCLib.DeepNullable<Omit<PrismaLib.Prisma.ClientUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Client, 'id'>
   
 
-const clientMutationUpdateOneResolver = createUpdateMutationResolver<ClientUpdateDataType, PrismaLib.Client>('Client', ['id'])
+const clientMutationUpdateOneResolver = NPCLib.createUpdateMutationResolver<ClientUpdateDataType, PrismaLib.Client>('Client', ['id'])
   
-const clientMutationUpdateOneField = createMutationFieldBuilder({
+const clientMutationUpdateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'Client',
   defaultMutationName: 'clientUpdate',
   defaultResolver: clientMutationUpdateOneResolver,
@@ -494,9 +494,9 @@ const clientMutationUpdateOneField = createMutationFieldBuilder({
   defaultInputType: 'ClientUpdateInput'
 })
   
-const clientMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
+const clientMutationDeleteOneResolver = NPCLib.createMutationDeleteFieldResolver<PrismaLib.Client, { id: PrismaLib.Client[\\"id\\"] }>('Client')
   
-const clientMutationDeleteOneField = createMutationDeleteFieldBuilder({
+const clientMutationDeleteOneField = NPCLib.createMutationDeleteFieldBuilder({
   modelName: 'Client',
   defaultMutationName: 'clientDelete',
   defaultResolver: clientMutationDeleteOneResolver,
@@ -542,7 +542,7 @@ const ContactModel = {
   client: {
     name: 'client',
     type: nonNull('Client' as any),
-    resolve: createRelationFieldResolver<PrismaLib.Contact, PrismaLib.Client>('Contact', 'client', ['id'])
+    resolve: NPCLib.createRelationFieldResolver<PrismaLib.Contact, PrismaLib.Client>('Contact', 'client', ['id'])
   },
   clientId: {
     name: 'clientId',
@@ -586,7 +586,7 @@ const ContactWhere = {
   }
 }
   
-const buildContactWhereInput = createInputTypeBuilder(ContactWhere)
+const buildContactWhereInput = NPCLib.createInputTypeBuilder(ContactWhere)
   
 export const ContactWhereInputType = buildContactWhereInput()
   
@@ -623,13 +623,13 @@ const ContactOrderBy = {
   }
 }
   
-const buildContactOrderByInput = createInputTypeBuilder(ContactOrderBy)
+const buildContactOrderByInput = NPCLib.createInputTypeBuilder(ContactOrderBy)
   
 export const ContactOrderByInputType = buildContactOrderByInput()
   
-const contactQueryOneResolver = createQueryOneFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
+const contactQueryOneResolver = NPCLib.createQueryOneFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
   
-const contactQueryOneField = createQueryOneFieldBuilder({
+const contactQueryOneField = NPCLib.createQueryOneFieldBuilder({
   modelName: 'Contact',
   defaultQueryName: 'contact',
   defaultResolver: contactQueryOneResolver,
@@ -644,9 +644,9 @@ export const ContactListType = objectType({
   }
 })
   
-const contactQueryListResolver = createQueryListFieldResolver<PrismaLib.Prisma.ContactFindManyArgs, PrismaLib.Contact>('Contact')
+const contactQueryListResolver = NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.ContactFindManyArgs, PrismaLib.Contact>('Contact')
   
-const contactQueryListField = createQueryListFieldBuilder({
+const contactQueryListField = NPCLib.createQueryListFieldBuilder({
   outputTypeName: 'ContactList',
   defaultQueryName: 'contactList',
   defaultResolver: contactQueryListResolver,
@@ -672,13 +672,13 @@ const ContactCreate = {
   }
 }
   
-const buildContactCreateInput = createInputTypeBuilder(ContactCreate)
+const buildContactCreateInput = NPCLib.createInputTypeBuilder(ContactCreate)
   
 export const ContactCreateInputType = buildContactCreateInput()
   
-const contactMutationCreateOneResolver = createCreateMutationResolver<PrismaLib.Prisma.ContactCreateArgs[\\"data\\"], PrismaLib.Contact>('Contact')
+const contactMutationCreateOneResolver = NPCLib.createCreateMutationResolver<PrismaLib.Prisma.ContactCreateArgs[\\"data\\"], PrismaLib.Contact>('Contact')
   
-const contactMutationCreateOneField = createMutationFieldBuilder({
+const contactMutationCreateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'Contact',
   defaultMutationName: 'contactCreate',
   defaultResolver: contactMutationCreateOneResolver,
@@ -706,17 +706,17 @@ const ContactUpdate = {
   }
 }
   
-const buildContactUpdateInput = createInputTypeBuilder(ContactUpdate, ['id'])
+const buildContactUpdateInput = NPCLib.createInputTypeBuilder(ContactUpdate, ['id'])
   
 export const ContactUpdateInputType = buildContactUpdateInput()
   
 
-type ContactUpdateDataType = DeepNullable<Omit<PrismaLib.Prisma.ContactUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Contact, 'id'>
+type ContactUpdateDataType = NPCLib.DeepNullable<Omit<PrismaLib.Prisma.ContactUpdateArgs[\\"data\\"], 'id'>> & Pick<PrismaLib.Contact, 'id'>
   
 
-const contactMutationUpdateOneResolver = createUpdateMutationResolver<ContactUpdateDataType, PrismaLib.Contact>('Contact', ['id'])
+const contactMutationUpdateOneResolver = NPCLib.createUpdateMutationResolver<ContactUpdateDataType, PrismaLib.Contact>('Contact', ['id'])
   
-const contactMutationUpdateOneField = createMutationFieldBuilder({
+const contactMutationUpdateOneField = NPCLib.createMutationFieldBuilder({
   modelName: 'Contact',
   defaultMutationName: 'contactUpdate',
   defaultResolver: contactMutationUpdateOneResolver,
@@ -724,9 +724,9 @@ const contactMutationUpdateOneField = createMutationFieldBuilder({
   defaultInputType: 'ContactUpdateInput'
 })
   
-const contactMutationDeleteOneResolver = createMutationDeleteFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
+const contactMutationDeleteOneResolver = NPCLib.createMutationDeleteFieldResolver<PrismaLib.Contact, { id: PrismaLib.Contact[\\"id\\"] }>('Contact')
   
-const contactMutationDeleteOneField = createMutationDeleteFieldBuilder({
+const contactMutationDeleteOneField = NPCLib.createMutationDeleteFieldBuilder({
   modelName: 'Contact',
   defaultMutationName: 'contactDelete',
   defaultResolver: contactMutationDeleteOneResolver,
