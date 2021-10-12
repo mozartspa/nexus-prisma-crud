@@ -49,20 +49,7 @@ export async function generateAndEmit(
         },
         {
           kind: StructureKind.ImportDeclaration,
-          namedImports: [
-            "createInputTypeBuilder",
-            "createQueryOneFieldBuilder",
-            "createQueryOneFieldResolver",
-            "createQueryListFieldBuilder",
-            "createQueryListFieldResolver",
-            "createCreateMutationResolver",
-            "createUpdateMutationResolver",
-            "createMutationFieldBuilder",
-            "createMutationDeleteFieldBuilder",
-            "createMutationDeleteFieldResolver",
-            "createRelationFieldResolver",
-            "DeepNullable",
-          ],
+          namespaceImport: "NPCLib",
           moduleSpecifier: "../generator/runtime",
         },
         {

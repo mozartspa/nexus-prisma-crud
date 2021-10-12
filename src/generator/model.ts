@@ -141,7 +141,7 @@ function generateWhere(
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
+          writer.writeLine(`NPCLib.createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
@@ -243,7 +243,7 @@ function generateOrderBy(
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
+          writer.writeLine(`NPCLib.createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
@@ -282,7 +282,7 @@ function generateQueryOne(
         initializer(writer) {
           const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `createQueryOneFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
+            `NPCLib.createQueryOneFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
           )
         },
       },
@@ -298,7 +298,7 @@ function generateQueryOne(
         name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createQueryOneFieldBuilder(${renderObject({
+            `NPCLib.createQueryOneFieldBuilder(${renderObject({
               modelName: asString(model.name),
               defaultQueryName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
@@ -359,7 +359,7 @@ function generateQueryList(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `createQueryListFieldResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
+            `NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
           )
         },
       },
@@ -375,7 +375,7 @@ function generateQueryList(
         name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createQueryListFieldBuilder(${renderObject({
+            `NPCLib.createQueryListFieldBuilder(${renderObject({
               outputTypeName: asString(outputType),
               defaultQueryName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
@@ -426,7 +426,7 @@ function generateCreate(
       {
         name: inputBuilder,
         initializer(writer) {
-          writer.writeLine(`createInputTypeBuilder(${inputDefinition})`)
+          writer.writeLine(`NPCLib.createInputTypeBuilder(${inputDefinition})`)
         },
       },
     ],
@@ -456,7 +456,7 @@ function generateCreate(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateArgs["data"], PrismaLib.${model.name}>('${model.name}')`
+            `NPCLib.createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateArgs["data"], PrismaLib.${model.name}>('${model.name}')`
           )
         },
       },
@@ -472,7 +472,7 @@ function generateCreate(
         name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createMutationFieldBuilder(${renderObject({
+            `NPCLib.createMutationFieldBuilder(${renderObject({
               modelName: asString(model.name),
               defaultMutationName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
@@ -526,7 +526,7 @@ function generateUpdate(
             .join(",")
 
           writer.writeLine(
-            `createInputTypeBuilder(${inputDefinition}, [${uniqueIdentifiers}])`
+            `NPCLib.createInputTypeBuilder(${inputDefinition}, [${uniqueIdentifiers}])`
           )
         },
       },
@@ -559,7 +559,7 @@ function generateUpdate(
     name: `${model.name}UpdateDataType`,
     type(writer) {
       writer.writeLine(
-        `DeepNullable<Omit<${prismaUpdateData}, ${uniqueIdentifiers.join(
+        `NPCLib.DeepNullable<Omit<${prismaUpdateData}, ${uniqueIdentifiers.join(
           " | "
         )}>> & Pick<PrismaLib.${model.name}, ${uniqueIdentifiers.join(" | ")}>`
       )
@@ -573,7 +573,7 @@ function generateUpdate(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `createUpdateMutationResolver<${
+            `NPCLib.createUpdateMutationResolver<${
               model.name
             }UpdateDataType, PrismaLib.${model.name}>('${
               model.name
@@ -593,7 +593,7 @@ function generateUpdate(
         name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createMutationFieldBuilder(${renderObject({
+            `NPCLib.createMutationFieldBuilder(${renderObject({
               modelName: asString(model.name),
               defaultMutationName: asString(operationName),
               defaultResolver: `${builder}Resolver`,
@@ -624,7 +624,7 @@ function generateDelete(
         initializer(writer) {
           const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `createMutationDeleteFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
+            `NPCLib.createMutationDeleteFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
           )
         },
       },
@@ -640,7 +640,7 @@ function generateDelete(
         name: `${builder}Field`,
         initializer(writer) {
           writer.writeLine(
-            `createMutationDeleteFieldBuilder(${renderObject({
+            `NPCLib.createMutationDeleteFieldBuilder(${renderObject({
               modelName: asString(model.name),
               defaultMutationName: asString(operationName),
               defaultResolver: `${builder}Resolver`,

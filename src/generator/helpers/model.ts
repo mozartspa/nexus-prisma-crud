@@ -120,7 +120,7 @@ export function getFieldDefinitionsForModel(model: DMMF.Model) {
         .map((id) => asString(id))
         .join(", ")
 
-      const resolve = `createRelationFieldResolver<${TRootModel}, ${TOutput}>(${modelName}, ${relFieldName}, [${uniqueIdentifiers}])`
+      const resolve = `NPCLib.createRelationFieldResolver<${TRootModel}, ${TOutput}>(${modelName}, ${relFieldName}, [${uniqueIdentifiers}])`
 
       type[field.name].resolve = resolve
     }
