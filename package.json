@@ -8,22 +8,8 @@
   "files": [
     "dist"
   ],
-  "main": "dist/entrypoints/main.js",
-  "typings": "dist/entrypoints/main.d.ts",
-  "exports": {
-    ".": "./dist/entrypoints/main.js",
-    "./scalars": "./dist/entrypoints/scalars.js"
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./dist/entrypoints/main.d.ts"
-      ],
-      "scalars": [
-        "./dist/entrypoints/scalars.d.ts"
-      ]
-    }
-  },
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "bin": {
     "nexus-prisma-crud": "./dist/cli/nexus-prisma-crud.js"
   },
