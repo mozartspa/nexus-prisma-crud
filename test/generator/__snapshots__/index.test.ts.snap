@@ -2,7 +2,7 @@
 
 exports[`can generate module with models and relations 1`] = `
 "import { enumType, inputObjectType, objectType, list, nonNull, nullable, arg } from \\"nexus\\"
-import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver, DeepNullable } from \\"../generator/runtime\\"
+import { createInputTypeBuilder, createQueryOneFieldBuilder, createQueryOneFieldResolver, createQueryListFieldBuilder, createQueryListFieldResolver, createCreateMutationResolver, createUpdateMutationResolver, createMutationFieldBuilder, createMutationDeleteFieldBuilder, createMutationDeleteFieldResolver, createRelationFieldResolver, DeepNullable } from \\"../generator/runtime\\"
 import * as PrismaLib from \\"../client\\"
 
 export const SortDirEnum = enumType({
@@ -97,6 +97,26 @@ export const RelatedCountOrderByInputType = inputObjectType({
     t.field('_count', { type: 'SortDir' as any })
   }
 })
+  
+const UserModel = {
+  $name: 'User',
+  id: {
+    name: 'id',
+    type: nonNull('Int' as any)
+  },
+  username: {
+    name: 'username',
+    type: nonNull('String' as any)
+  },
+  name: {
+    name: 'name',
+    type: nullable('String' as any)
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int' as any)
+  }
+}
   
 const UserWhere = {
   $name: 'UserWhereInput',
@@ -274,6 +294,7 @@ const userMutationDeleteOneField = createMutationDeleteFieldBuilder({
 })
   
 export const UserCRUD = {
+  Model: UserModel,
   Where: UserWhere,
   whereInputType: buildUserWhereInput,
   OrderBy: UserOrderBy,
@@ -292,6 +313,27 @@ export const UserCRUD = {
   mutationUpdateResolver: userMutationUpdateOneResolver,
   mutationDelete: userMutationDeleteOneField,
   mutationDeleteResolver: userMutationDeleteOneResolver,
+}
+  
+const ClientModel = {
+  $name: 'Client',
+  id: {
+    name: 'id',
+    type: nonNull('Int' as any)
+  },
+  name: {
+    name: 'name',
+    type: nullable('String' as any)
+  },
+  age: {
+    name: 'age',
+    type: nullable('Int' as any)
+  },
+  contacts: {
+    name: 'contacts',
+    type: nonNull(list(nonNull('Contact' as any))),
+    resolve: createRelationFieldResolver<PrismaLib.Client, PrismaLib.Contact[]>('Client', 'contacts', ['id'])
+  }
 }
   
 const ClientWhere = {
@@ -462,6 +504,7 @@ const clientMutationDeleteOneField = createMutationDeleteFieldBuilder({
 })
   
 export const ClientCRUD = {
+  Model: ClientModel,
   Where: ClientWhere,
   whereInputType: buildClientWhereInput,
   OrderBy: ClientOrderBy,
@@ -480,6 +523,31 @@ export const ClientCRUD = {
   mutationUpdateResolver: clientMutationUpdateOneResolver,
   mutationDelete: clientMutationDeleteOneField,
   mutationDeleteResolver: clientMutationDeleteOneResolver,
+}
+  
+const ContactModel = {
+  $name: 'Contact',
+  id: {
+    name: 'id',
+    type: nonNull('Int' as any)
+  },
+  name: {
+    name: 'name',
+    type: nonNull('String' as any)
+  },
+  phone: {
+    name: 'phone',
+    type: nullable('String' as any)
+  },
+  client: {
+    name: 'client',
+    type: nonNull('Client' as any),
+    resolve: createRelationFieldResolver<PrismaLib.Contact, PrismaLib.Client>('Contact', 'client', ['id'])
+  },
+  clientId: {
+    name: 'clientId',
+    type: nonNull('Int' as any)
+  }
 }
   
 const ContactWhere = {
@@ -666,6 +734,7 @@ const contactMutationDeleteOneField = createMutationDeleteFieldBuilder({
 })
   
 export const ContactCRUD = {
+  Model: ContactModel,
   Where: ContactWhere,
   whereInputType: buildContactWhereInput,
   OrderBy: ContactOrderBy,
