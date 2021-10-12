@@ -8,8 +8,22 @@
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/entrypoints/main.js",
+  "typings": "dist/entrypoints/main.d.ts",
+  "exports": {
+    ".": "./dist/entrypoints/main.js",
+    "./scalars": "./dist/entrypoints/scalars.js"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/entrypoints/main.d.ts"
+      ],
+      "scalars": [
+        "./dist/entrypoints/scalars.d.ts"
+      ]
+    }
+  },
   "bin": {
     "nexus-prisma-crud": "./dist/cli/nexus-prisma-crud.js"
   },
@@ -45,6 +59,8 @@
   },
   "dependencies": {
     "@prisma/generator-helper": "^3.0.2",
+    "decimal.js": "^10.3.1",
+    "graphql-scalars": "^1.11.1",
     "ts-morph": "^12.0.0"
   },
   "homepage": "https://github.com/mozartspa/nexus-prisma-crud",
