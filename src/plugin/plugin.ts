@@ -9,7 +9,7 @@ function maybeScalar(typeName: string) {
 export type NexusPrismaCrudPluginOptions = {}
 
 export const nexusPrismaCrudPlugin = (
-  _options: NexusPrismaCrudPluginOptions
+  _options?: NexusPrismaCrudPluginOptions
 ) => {
   return plugin({
     name: "NexusPrismaCrud",
