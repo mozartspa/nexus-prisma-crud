@@ -3,6 +3,7 @@ import { SourceFile, VariableDeclarationKind } from "ts-morph"
 import { resolveUniqueIdentifiers } from "./helpers/constraints"
 import {
   getFieldDefinitionsForCreate,
+  getFieldDefinitionsForModel,
   getFieldDefinitionsForOrderBy,
   getFieldDefinitionsForUpdate,
   getFieldDefinitionsForWhere,
@@ -15,6 +16,9 @@ import { GeneratorContext } from "./types"
 
 function getNameMappings(model: DMMF.Model) {
   return {
+    model: {
+      outputDefinition: `${model.name}Model`,
+    },
     where: {
       inputDefinition: `${model.name}Where`,
       inputType: `${model.name}WhereInput`,
@@ -63,6 +67,7 @@ export function generateModel(
   model: DMMF.Model,
   context: GeneratorContext
 ) {
+  generateModelFields(sourceFile, model, context)
   generateWhere(sourceFile, model, context)
   generateWhereListRelation(sourceFile, model, context)
   generateOrderBy(sourceFile, model, context)
@@ -72,6 +77,33 @@ export function generateModel(
   generateUpdate(sourceFile, model, context)
   generateDelete(sourceFile, model, context)
   generateExport(sourceFile, model, context)
+}
+
+function generateModelFields(
+  sourceFile: SourceFile,
+  model: DMMF.Model,
+  _context: GeneratorContext
+) {
+  const { outputDefinition } = getNameMappings(model).model
+
+  // Fields definition
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: false,
+    declarations: [
+      {
+        name: `${outputDefinition}`,
+        initializer(writer) {
+          writer.writeLine(
+            renderObject({
+              $name: asString(model.name),
+              ...getFieldDefinitionsForModel(model),
+            })
+          )
+        },
+      },
+    ],
+  })
 }
 
 function generateWhere(
@@ -636,6 +668,7 @@ function generateExport(
         name: `${model.name}CRUD`,
         initializer(writer) {
           writer.block(() => {
+            writer.writeLine(`Model: ${names.model.outputDefinition},`)
             writer.writeLine(`Where: ${names.where.inputDefinition},`)
             writer.writeLine(`whereInputType: ${names.where.inputBuilder},`)
             writer.writeLine(`OrderBy: ${names.orderBy.inputDefinition},`)

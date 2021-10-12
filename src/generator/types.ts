@@ -5,3 +5,5 @@ export type GeneratorContext = {
 }
 
 export type GeneratedTypes = Record<string, AllNexusTypeDefs | undefined>
+
+export type RecordUnknown = Record<string, unknown>
