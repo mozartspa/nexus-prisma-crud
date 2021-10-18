@@ -1,7 +1,11 @@
-import { inputObjectType } from "nexus"
+import { inputObjectType, nonNull, nullable } from "nexus"
 import { InputDefinitionBlock } from "nexus/dist/blocks"
 import { NexusInputObjectTypeConfig } from "nexus/dist/core"
-import { InputDefinition, InputDefinitionFieldSelector } from "./types"
+import {
+  IncludeConfig,
+  InputDefinition,
+  InputDefinitionFieldSelector,
+} from "./types"
 
 export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
   inputDef: InputDefinition<T>,
@@ -9,8 +13,8 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
 ) {
   type Options = {
     name?: string
-    include?: InputDefinitionFieldSelector<T>
-    exclude?: InputDefinitionFieldSelector<T>
+    include?: InputDefinitionFieldSelector<T, IncludeConfig>
+    exclude?: InputDefinitionFieldSelector<T, true>
     extraDefinition?: (t: InputDefinitionBlock<string>) => void
   }
 
@@ -25,6 +29,16 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
       extraDefinition,
       ...rest
     } = options
+
+    const getIncludeConfig = (key: string) => {
+      if (!include) {
+        return undefined
+      }
+
+      const config: IncludeConfig | undefined = (include as any)[key]
+
+      return config
+    }
 
     const shouldAddKey = (key: string) => {
       // Check exclude
@@ -48,7 +62,14 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
           if (shouldAddKey(key)) {
             const field = inputDef[key as keyof typeof inputDef]
             if (typeof field !== "string" && field.type) {
-              t.field(field as any)
+              const includeConfig = getIncludeConfig(key)
+              if (includeConfig === "optional") {
+                t.field({ ...field, type: nullable(field.type) })
+              } else if (includeConfig === "required") {
+                t.field({ ...field, type: nonNull(field.type) })
+              } else {
+                t.field(field)
+              }
             }
           }
         }
