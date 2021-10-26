@@ -11,6 +11,21 @@ function allCasesHandled(x: never): never {
   throw new Error(`All cases were not handled:\n${x}`)
 }
 
+function isScalarSupportedInWhere(scalar: string) {
+  switch (scalar) {
+    case "ID":
+    case "String":
+    case "Int":
+    case "Float":
+    case "Boolean":
+    case "DateTime":
+      return true
+
+    default:
+      return false
+  }
+}
+
 export function renderUniqueIdentifiersTSType(model: DMMF.Model): string {
   const fields = resolveUniqueIdentifierFields(model)
 
@@ -223,9 +238,11 @@ export function getFieldDefinitionsForWhere(
     switch (field.kind) {
       case "scalar": {
         const graphqlType = fieldTypeToGraphQLType(field)
-        type[field.name] = {
-          name: asString(field.name),
-          type: `nullable(${asString(`${graphqlType}FilterInput`)} as any)`,
+        if (isScalarSupportedInWhere(graphqlType)) {
+          type[field.name] = {
+            name: asString(field.name),
+            type: `nullable(${asString(`${graphqlType}FilterInput`)} as any)`,
+          }
         }
         break
       }
