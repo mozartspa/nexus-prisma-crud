@@ -20,6 +20,7 @@ export async function generateAndEmit(
     skipAddingFilesFromTsConfig: true,
     compilerOptions: {
       declaration: true,
+      sourceMap: false,
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       types: [relativePrismaClientPath],
@@ -80,6 +81,9 @@ export async function generateAndEmit(
 
   await project.save()
   await project.emit()
+
+  // Remove source files to prevent typescript from trying to recompile it
+  project.getSourceFiles().forEach((file) => file.deleteImmediatelySync())
 }
 
 function createGeneratorContext() {
