@@ -21,7 +21,7 @@ export async function generateModules(
     datamodel: prismaDatamodel,
   })
 
-  await generateAndEmit(dmmf, dirOut, prismaClientPath)
+  await generateAndEmit(dmmf, dirOut, prismaClientPath, true)
 
   async function readFile(file: string) {
     return (await fs.readAsync(Path.posix.join(dirOut, file))) || ""

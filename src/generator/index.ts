@@ -12,7 +12,8 @@ import { GeneratorContext } from "./types"
 export async function generateAndEmit(
   dmmf: DMMF.Document,
   outputPath: string,
-  prismaClientPath: string
+  prismaClientPath: string,
+  includeSources = false
 ) {
   const relativePrismaClientPath = path.relative(outputPath, prismaClientPath)
 
@@ -82,8 +83,10 @@ export async function generateAndEmit(
   await project.save()
   await project.emit()
 
-  // Remove source files to prevent typescript from trying to recompile it
-  project.getSourceFiles().forEach((file) => file.deleteImmediatelySync())
+  // Remove source files if they should not be included
+  if (!includeSources) {
+    project.getSourceFiles().forEach((file) => file.deleteImmediatelySync())
+  }
 }
 
 function createGeneratorContext() {
