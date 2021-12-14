@@ -9,13 +9,33 @@ import { generateModel } from "./model"
 import { generateModelCommon } from "./model_common"
 import { GeneratorContext } from "./types"
 
+function getRelativePrismaClientPath(
+  outputPath: string,
+  prismaClientPath: string
+) {
+  let relativePath = path.relative(outputPath, prismaClientPath)
+
+  // Replace `@prisma/client` with `.prisma/client/index` in order to target a specific file
+  // instead of a package, otherwise when there are multiple packages of `prisma` in the same
+  // project some build issues may arise (TS thinks that the packages with same name has same content).
+  relativePath = relativePath.replace(
+    "/@prisma/client",
+    "/.prisma/client/index"
+  )
+
+  return relativePath
+}
+
 export async function generateAndEmit(
   dmmf: DMMF.Document,
   outputPath: string,
   prismaClientPath: string,
   includeSources = false
 ) {
-  const relativePrismaClientPath = path.relative(outputPath, prismaClientPath)
+  const relativePrismaClientPath = getRelativePrismaClientPath(
+    outputPath,
+    prismaClientPath
+  )
 
   const project = new Project({
     skipAddingFilesFromTsConfig: true,
