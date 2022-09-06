@@ -1,8 +1,4 @@
-import { arg, FieldResolver, nonNull } from "nexus"
-import {
-  NexusInputObjectTypeDef,
-  NexusOutputFieldConfig,
-} from "nexus/dist/core"
+import { arg, core, FieldResolver, nonNull } from "nexus"
 
 export type CreateMutationFieldBuilderOptions<
   TModelName extends string,
@@ -12,7 +8,7 @@ export type CreateMutationFieldBuilderOptions<
   modelName: TModelName
   defaultMutationName: TMutationName
   defaultResolver: FieldResolver<"Mutation", string>
-  inputBuilder: (opts: TInputOption) => NexusInputObjectTypeDef<string>
+  inputBuilder: (opts: TInputOption) => core.NexusInputObjectTypeDef<string>
   defaultInputType: string
 }
 
@@ -27,7 +23,7 @@ type BuilderOptions<MutationName extends string, TInputOption> = Options<
   TInputOption
 > &
   Omit<
-    NexusOutputFieldConfig<"Mutation", MutationName>,
+    core.NexusOutputFieldConfig<"Mutation", MutationName>,
     keyof Options<MutationName, TInputOption> | "type" | "args"
   >
 
