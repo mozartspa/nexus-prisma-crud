@@ -1,16 +1,20 @@
 import { plugin } from "nexus"
-import { generatedTypes } from "../runtime"
+import { GeneratedTypes } from "../generator/types"
 import * as Scalars from "../scalars"
 
 function maybeScalar(typeName: string) {
   return (Scalars as any)[typeName]
 }
 
-export type NexusPrismaCrudPluginOptions = {}
+export type NexusPrismaCrudPluginOptions = {
+  generatedTypes: GeneratedTypes
+}
 
 export const nexusPrismaCrudPlugin = (
-  _options?: NexusPrismaCrudPluginOptions
+  options: NexusPrismaCrudPluginOptions
 ) => {
+  const { generatedTypes } = options
+
   return plugin({
     name: "NexusPrismaCrud",
     onMissingType: (typeName) => {
