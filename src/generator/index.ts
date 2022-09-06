@@ -45,6 +45,9 @@ export async function generateAndEmit(
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       types: [relativePrismaClientPath],
+      paths: {
+        "nexus-prisma-crud": [path.join(__dirname, "..", "index.js")],
+      },
     },
   })
 
@@ -71,8 +74,8 @@ export async function generateAndEmit(
         },
         {
           kind: StructureKind.ImportDeclaration,
-          namespaceImport: "NPCLib",
-          moduleSpecifier: "../generator/runtime",
+          namedImports: ["Runtime as NPCLib"],
+          moduleSpecifier: "nexus-prisma-crud",
         },
         {
           kind: StructureKind.ImportDeclaration,
