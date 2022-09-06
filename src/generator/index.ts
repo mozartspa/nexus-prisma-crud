@@ -45,9 +45,6 @@ export async function generateAndEmit(
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       types: [relativePrismaClientPath],
-      paths: {
-        "nexus-prisma-crud": [path.join(__dirname, "..", "index.js")],
-      },
     },
   })
 
