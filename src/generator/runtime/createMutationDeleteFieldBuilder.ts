@@ -1,5 +1,4 @@
-import { FieldResolver, nonNull } from "nexus"
-import { ArgsRecord, NexusOutputFieldConfig } from "nexus/dist/core"
+import { core, FieldResolver, nonNull } from "nexus"
 
 export type CreateMutationDeleteFieldBuilderOptions<
   TModelName extends string,
@@ -8,7 +7,7 @@ export type CreateMutationDeleteFieldBuilderOptions<
   modelName: TModelName
   defaultMutationName: TMutationName
   defaultResolver: FieldResolver<"Mutation", string>
-  args: ArgsRecord
+  args: core.ArgsRecord
 }
 
 type Options<MutationName extends string> = {
@@ -18,7 +17,7 @@ type Options<MutationName extends string> = {
 
 type BuilderOptions<MutationName extends string> = Options<MutationName> &
   Omit<
-    NexusOutputFieldConfig<"Mutation", MutationName>,
+    core.NexusOutputFieldConfig<"Mutation", MutationName>,
     keyof Options<MutationName> | "type" | "args"
   >
 

@@ -1,8 +1,4 @@
-import { arg, FieldResolver, intArg, list } from "nexus"
-import {
-  NexusInputObjectTypeDef,
-  NexusOutputFieldConfig,
-} from "nexus/dist/core"
+import { arg, core, FieldResolver, intArg, list } from "nexus"
 
 export type CreateQueryListFieldBuilderOptions<
   TOutputTypeName extends string,
@@ -13,10 +9,12 @@ export type CreateQueryListFieldBuilderOptions<
   outputTypeName: TOutputTypeName
   defaultQueryName: TQueryName
   defaultResolver: FieldResolver<"Query", string>
-  whereInputBuilder: (opts: TWhereOptions) => NexusInputObjectTypeDef<string>
+  whereInputBuilder: (
+    opts: TWhereOptions
+  ) => core.NexusInputObjectTypeDef<string>
   orderByInputBuilder: (
     opts: TOrderByOptions
-  ) => NexusInputObjectTypeDef<string>
+  ) => core.NexusInputObjectTypeDef<string>
   defaultWhereInputName: string
   defaultOrderByInputName: string
 }
@@ -34,7 +32,7 @@ type BuilderOptions<
   TOrderByOptions
 > = Options<QueryName, TWhereOptions, TOrderByOptions> &
   Omit<
-    NexusOutputFieldConfig<"Query", QueryName>,
+    core.NexusOutputFieldConfig<"Query", QueryName>,
     keyof Options<QueryName, TWhereOptions, TOrderByOptions> | "type" | "args"
   >
 

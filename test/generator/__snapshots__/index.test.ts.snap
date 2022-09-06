@@ -2,7 +2,7 @@
 
 exports[`can generate module with models and relations 1`] = `
 "import { enumType, inputObjectType, objectType, list, nonNull, nullable, arg } from \\"nexus\\"
-import * as NPCLib from \\"../generator/runtime\\"
+import { Runtime as NPCLib } from \\"nexus-prisma-crud\\"
 import * as PrismaLib from \\"../client\\"
 
 export const SortDirEnum = enumType({

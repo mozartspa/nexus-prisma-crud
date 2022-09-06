@@ -71,8 +71,8 @@ export async function generateAndEmit(
         },
         {
           kind: StructureKind.ImportDeclaration,
-          namespaceImport: "NPCLib",
-          moduleSpecifier: "../generator/runtime",
+          namedImports: ["Runtime as NPCLib"],
+          moduleSpecifier: "nexus-prisma-crud",
         },
         {
           kind: StructureKind.ImportDeclaration,

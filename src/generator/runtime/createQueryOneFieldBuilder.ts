@@ -1,5 +1,4 @@
-import { FieldResolver } from "nexus"
-import { ArgsRecord, NexusOutputFieldConfig } from "nexus/dist/core"
+import { core, FieldResolver } from "nexus"
 
 export type CreateQueryOneFieldBuilderOptions<
   TModelName extends string,
@@ -8,7 +7,7 @@ export type CreateQueryOneFieldBuilderOptions<
   modelName: TModelName
   defaultQueryName: TQueryName
   defaultResolver: FieldResolver<"Query", string>
-  args: ArgsRecord
+  args: core.ArgsRecord
 }
 
 type Options<QueryName extends string> = {
@@ -18,7 +17,7 @@ type Options<QueryName extends string> = {
 
 type BuilderOptions<QueryName extends string> = Options<QueryName> &
   Omit<
-    NexusOutputFieldConfig<"Query", QueryName>,
+    core.NexusOutputFieldConfig<"Query", QueryName>,
     keyof Options<QueryName> | "type" | "args"
   >
 

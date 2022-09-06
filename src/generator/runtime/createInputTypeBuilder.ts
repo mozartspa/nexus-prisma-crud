@@ -1,6 +1,4 @@
-import { inputObjectType, nonNull, nullable } from "nexus"
-import { InputDefinitionBlock } from "nexus/dist/blocks"
-import { NexusInputObjectTypeConfig } from "nexus/dist/core"
+import { blocks, core, inputObjectType, nonNull, nullable } from "nexus"
 import {
   IncludeConfig,
   InputDefinition,
@@ -15,11 +13,11 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
     name?: string
     include?: InputDefinitionFieldSelector<T, IncludeConfig>
     exclude?: InputDefinitionFieldSelector<T, true>
-    extraDefinition?: (t: InputDefinitionBlock<string>) => void
+    extraDefinition?: (t: blocks.InputDefinitionBlock<string>) => void
   }
 
   type BuilderOptions = Options &
-    Omit<NexusInputObjectTypeConfig<string>, keyof Options | "definition">
+    Omit<core.NexusInputObjectTypeConfig<string>, keyof Options | "definition">
 
   return (options: BuilderOptions = {}) => {
     const {
