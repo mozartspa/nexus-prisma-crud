@@ -282,7 +282,7 @@ function generateQueryOne(
         initializer(writer) {
           const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `NPCLib.createQueryOneFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
+            `NPCLib.createQueryOneFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}', runtimeContext)`
           )
         },
       },
@@ -359,7 +359,7 @@ function generateQueryList(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}')`
+            `NPCLib.createQueryListFieldResolver<PrismaLib.Prisma.${model.name}FindManyArgs, PrismaLib.${model.name}>('${model.name}', runtimeContext)`
           )
         },
       },
@@ -456,7 +456,7 @@ function generateCreate(
         name: `${builder}Resolver`,
         initializer(writer) {
           writer.writeLine(
-            `NPCLib.createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateArgs["data"], PrismaLib.${model.name}>('${model.name}')`
+            `NPCLib.createCreateMutationResolver<PrismaLib.Prisma.${model.name}CreateArgs["data"], PrismaLib.${model.name}>('${model.name}', runtimeContext)`
           )
         },
       },
@@ -577,7 +577,7 @@ function generateUpdate(
               model.name
             }UpdateDataType, PrismaLib.${model.name}>('${
               model.name
-            }', [${uniqueIdentifiers.join(",")}])`
+            }', [${uniqueIdentifiers.join(",")}], runtimeContext)`
           )
         },
       },
@@ -624,7 +624,7 @@ function generateDelete(
         initializer(writer) {
           const argsType = renderUniqueIdentifiersTSType(model)
           writer.writeLine(
-            `NPCLib.createMutationDeleteFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}')`
+            `NPCLib.createMutationDeleteFieldResolver<PrismaLib.${model.name}, ${argsType}>('${model.name}', runtimeContext)`
           )
         },
       },

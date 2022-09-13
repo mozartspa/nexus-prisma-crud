@@ -1,16 +1,18 @@
 import { GetGen } from "nexus/dist/typegenTypeHelpers"
-import { getPrismaClient, lowerFirst } from "./helpers"
+import { lowerFirst } from "./helpers"
+import { RuntimeContext } from "./runtimeContext"
 import { DeepNullable } from "./types"
 
 export function createQueryListFieldResolver<TFindManyArgs, TModel>(
-  modelName: string
+  modelName: string,
+  context: RuntimeContext
 ) {
   const resolver = async (
     _root: any,
     args: DeepNullable<TFindManyArgs>,
     ctx: GetGen<"context">
   ) => {
-    const prisma = getPrismaClient(ctx)
+    const prisma = context.getPrismaClient(ctx)
     const propertyModelName = lowerFirst(modelName)
     const prismaModel = prisma[propertyModelName]
 

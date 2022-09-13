@@ -1,11 +1,13 @@
 import { GetGen } from "nexus/dist/typegenTypeHelpers"
-import { getPrismaClient, lowerFirst } from "./helpers"
+import { lowerFirst } from "./helpers"
+import { RuntimeContext } from "./runtimeContext"
 
 export function createMutationDeleteFieldResolver<TModel, TArgs>(
-  modelName: string
+  modelName: string,
+  context: RuntimeContext
 ) {
   const resolver = async (_root: any, args: TArgs, ctx: GetGen<"context">) => {
-    const prisma = getPrismaClient(ctx)
+    const prisma = context.getPrismaClient(ctx)
     const propertyModelName = lowerFirst(modelName)
     const prismaModel = prisma[propertyModelName]
 

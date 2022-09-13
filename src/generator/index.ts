@@ -7,6 +7,7 @@ import { generateFilters } from "./filters"
 import { generateGeneratedTypes } from "./generatedTypes"
 import { generateModel } from "./model"
 import { generateModelCommon } from "./model_common"
+import { generatePlugin, generateRuntimeContext } from "./plugin"
 import { GeneratorContext } from "./types"
 
 function getRelativePrismaClientPath(
@@ -45,6 +46,9 @@ export async function generateAndEmit(
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       types: [relativePrismaClientPath],
+      paths: {
+        "nexus-prisma-crud": [path.join(__dirname, "..", "..")],
+      },
     },
   })
 
@@ -86,13 +90,13 @@ export async function generateAndEmit(
     }
   )
 
+  generateRuntimeContext(sourceFile, context)
   generateFilters(sourceFile, context)
   generateModelCommon(sourceFile, context)
   enums.forEach((modelEnum) => generateEnum(sourceFile, modelEnum, context))
   models.forEach((model) => generateModel(sourceFile, model, context))
-
-  // This must be the last generated thing
   generateGeneratedTypes(sourceFile, context.getTypes())
+  generatePlugin(sourceFile, context)
 
   sourceFile.formatText({
     indentSize: 2,

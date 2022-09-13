@@ -1,16 +1,18 @@
 import { GetGen } from "nexus/dist/typegenTypeHelpers"
-import { getPrismaClient, lowerFirst, splitRecord } from "./helpers"
+import { lowerFirst, splitRecord } from "./helpers"
+import { RuntimeContext } from "./runtimeContext"
 
 export function createUpdateMutationResolver<TUpdateInput, TModel>(
   modelName: string,
-  uniqueIdentifiers: string[]
+  uniqueIdentifiers: string[],
+  context: RuntimeContext
 ) {
   const resolver = async (
     _root: any,
     args: { data: TUpdateInput },
     ctx: GetGen<"context">
   ) => {
-    const prisma = getPrismaClient(ctx)
+    const prisma = context.getPrismaClient(ctx)
     const propertyModelName = lowerFirst(modelName)
     const prismaModel = prisma[propertyModelName]
 
