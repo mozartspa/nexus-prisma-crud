@@ -1,7 +1,8 @@
 import * as DecimalJs from "decimal.js"
-import { GraphQLScalarType, Kind } from "graphql"
+import { Kind } from "graphql"
+import { scalarType } from "nexus"
 
-export const Decimal = new GraphQLScalarType({
+export const Decimal = scalarType({
   name: "Decimal",
   description: "An arbitrary-precision Decimal type",
   /**
