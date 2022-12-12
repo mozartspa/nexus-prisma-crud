@@ -233,4 +233,82 @@ export function generateFilters(
       },
     ],
   })
+
+  context.addType("DecimalFilterInput", "DecimalFilterInputType")
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: "DecimalFilterInputType",
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: 'DecimalFilterInput',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(
+                  `t.field('equals', { type: 'Decimal' as any })`
+                )
+                writer.writeLine(
+                  `t.list.field('in', { type: 'Decimal' as any })`
+                )
+                writer.writeLine(
+                  `t.list.field('notIn', { type: 'Decimal' as any })`
+                )
+                writer.writeLine(`t.field('lt', { type: 'Decimal' as any })`)
+                writer.writeLine(`t.field('lte', { type: 'Decimal' as any })`)
+                writer.writeLine(`t.field('gt', { type: 'Decimal' as any })`)
+                writer.writeLine(`t.field('gte', { type: 'Decimal' as any })`)
+                writer.writeLine(
+                  `t.field('not', { type: 'DecimalFilterInput' as any })`
+                )
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
+
+  context.addType("BigIntFilterInput", "BigIntFilterInputType")
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: "BigIntFilterInputType",
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: 'BigIntFilterInput',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(`t.field('equals', { type: 'BigInt' as any })`)
+                writer.writeLine(
+                  `t.list.field('in', { type: 'BigInt' as any })`
+                )
+                writer.writeLine(
+                  `t.list.field('notIn', { type: 'BigInt' as any })`
+                )
+                writer.writeLine(`t.field('lt', { type: 'BigInt' as any })`)
+                writer.writeLine(`t.field('lte', { type: 'BigInt' as any })`)
+                writer.writeLine(`t.field('gt', { type: 'BigInt' as any })`)
+                writer.writeLine(`t.field('gte', { type: 'BigInt' as any })`)
+                writer.writeLine(
+                  `t.field('not', { type: 'BigIntFilterInput' as any })`
+                )
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
 }

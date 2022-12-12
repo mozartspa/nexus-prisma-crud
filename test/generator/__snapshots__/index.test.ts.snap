@@ -95,6 +95,34 @@ export const DateTimeFilterInputType = inputObjectType({
   }
 })
   
+export const DecimalFilterInputType = inputObjectType({
+  name: 'DecimalFilterInput',
+  definition(t) {
+    t.field('equals', { type: 'Decimal' as any })
+    t.list.field('in', { type: 'Decimal' as any })
+    t.list.field('notIn', { type: 'Decimal' as any })
+    t.field('lt', { type: 'Decimal' as any })
+    t.field('lte', { type: 'Decimal' as any })
+    t.field('gt', { type: 'Decimal' as any })
+    t.field('gte', { type: 'Decimal' as any })
+    t.field('not', { type: 'DecimalFilterInput' as any })
+  }
+})
+  
+export const BigIntFilterInputType = inputObjectType({
+  name: 'BigIntFilterInput',
+  definition(t) {
+    t.field('equals', { type: 'BigInt' as any })
+    t.list.field('in', { type: 'BigInt' as any })
+    t.list.field('notIn', { type: 'BigInt' as any })
+    t.field('lt', { type: 'BigInt' as any })
+    t.field('lte', { type: 'BigInt' as any })
+    t.field('gt', { type: 'BigInt' as any })
+    t.field('gte', { type: 'BigInt' as any })
+    t.field('not', { type: 'BigIntFilterInput' as any })
+  }
+})
+  
 export const RelatedCountOrderByInputType = inputObjectType({
   name: 'RelatedCountOrderByInput',
   definition(t) {
@@ -119,6 +147,14 @@ const UserModel = {
   age: {
     name: 'age',
     type: nullable('Int' as any)
+  },
+  amount: {
+    name: 'amount',
+    type: nullable('Decimal' as any)
+  },
+  bigint: {
+    name: 'bigint',
+    type: nullable('BigInt' as any)
   }
 }
   
@@ -139,6 +175,14 @@ const UserWhere = {
   age: {
     name: 'age',
     type: nullable('IntFilterInput' as any)
+  },
+  amount: {
+    name: 'amount',
+    type: nullable('DecimalFilterInput' as any)
+  },
+  bigint: {
+    name: 'bigint',
+    type: nullable('BigIntFilterInput' as any)
   },
   AND: {
     name: 'AND',
@@ -183,6 +227,14 @@ const UserOrderBy = {
   },
   age: {
     name: 'age',
+    type: 'SortDir'
+  },
+  amount: {
+    name: 'amount',
+    type: 'SortDir'
+  },
+  bigint: {
+    name: 'bigint',
     type: 'SortDir'
   }
 }
@@ -233,6 +285,14 @@ const UserCreate = {
   age: {
     name: 'age',
     type: nullable('Int' as any)
+  },
+  amount: {
+    name: 'amount',
+    type: nullable('Decimal' as any)
+  },
+  bigint: {
+    name: 'bigint',
+    type: nullable('BigInt' as any)
   }
 }
   
@@ -267,6 +327,14 @@ const UserUpdate = {
   age: {
     name: 'age',
     type: nullable('Int' as any)
+  },
+  amount: {
+    name: 'amount',
+    type: nullable('Decimal' as any)
+  },
+  bigint: {
+    name: 'bigint',
+    type: nullable('BigInt' as any)
   }
 }
   
@@ -767,6 +835,8 @@ export const generatedTypes = {
   'FloatFilterInput': FloatFilterInputType,
   'BooleanFilterInput': BooleanFilterInputType,
   'DateTimeFilterInput': DateTimeFilterInputType,
+  'DecimalFilterInput': DecimalFilterInputType,
+  'BigIntFilterInput': BigIntFilterInputType,
   'RelatedCountOrderByInput': RelatedCountOrderByInputType,
   'UserWhereInput': UserWhereInputType,
   'UserListRelationWhereInput': UserListRelationWhereInputType,

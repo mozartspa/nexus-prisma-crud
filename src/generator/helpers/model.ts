@@ -19,6 +19,8 @@ function isScalarSupportedInWhere(scalar: string) {
     case "Float":
     case "Boolean":
     case "DateTime":
+    case "Decimal":
+    case "BigInt":
       return true
 
     default:

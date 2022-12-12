@@ -6,6 +6,8 @@ const modelsRelationsSchema = `
     username String  @unique
     name     String? 
     age      Int?
+    amount   Decimal?
+    bigint   BigInt?
   }
   
   model Client {
