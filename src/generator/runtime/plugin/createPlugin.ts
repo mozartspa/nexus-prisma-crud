@@ -23,6 +23,17 @@ export function createPlugin(options: NexusPrismaCrudPluginCreateOptions) {
     return plugin({
       name: "NexusPrismaCrud",
       onMissingType: (typeName) => {
+        // *WhereInput types are not included by default
+        if (
+          generatedTypes[typeName] &&
+          typeName.endsWith("WhereInput") &&
+          !typeName.endsWith("ListRelationWhereInput")
+        ) {
+          throw new Error(
+            `It looks like type ${typeName} was not included in the schema.`
+          )
+        }
+
         return generatedTypes[typeName] ?? maybeScalar(typeName)
       },
     })
