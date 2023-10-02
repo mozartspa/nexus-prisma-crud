@@ -30,7 +30,6 @@ export function createRelationFieldResolver<TRootModel, TOutput>(
 
     const result: any = findUnique({
       where: buildWhereUniqueInput(root as any, uniqueIdentifiers),
-      rejectOnNotFound: false,
     })
 
     return result[relationFieldName]()
