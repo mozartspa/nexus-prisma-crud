@@ -63,5 +63,8 @@
     "crud",
     "prisma",
     "generator"
-  ]
+  ],
+  "engines": {
+    "node": ">=12"
+  }
 }
