@@ -5,6 +5,7 @@ import { SemicolonPreference } from "typescript"
 import { generateEnum } from "./enum"
 import { generateFilters } from "./filters"
 import { generateGeneratedTypes } from "./generatedTypes"
+import { VirtualSourceFile } from "./helpers/virtualSourceFile"
 import { generateModel } from "./model"
 import { generateModelCommon } from "./model_common"
 import { generatePlugin, generateRuntimeContext } from "./plugin"
@@ -94,7 +95,11 @@ export async function generateAndEmit(
   generateFilters(sourceFile, context)
   generateModelCommon(sourceFile, context)
   enums.forEach((modelEnum) => generateEnum(sourceFile, modelEnum, context))
-  models.forEach((model) => generateModel(sourceFile, model, context))
+
+  const vSourceFile = new VirtualSourceFile()
+  models.forEach((model) => generateModel(vSourceFile, model, context))
+  vSourceFile.applyToSource(sourceFile)
+
   generateGeneratedTypes(sourceFile, context.getTypes())
   generatePlugin(sourceFile, context)
 

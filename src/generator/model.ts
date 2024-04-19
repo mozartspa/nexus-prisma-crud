@@ -1,5 +1,5 @@
 import { DMMF } from "@prisma/generator-helper"
-import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { VariableDeclarationKind } from "ts-morph"
 import { resolveUniqueIdentifiers } from "./helpers/constraints"
 import {
   getFieldDefinitionsForCreate,
@@ -11,6 +11,7 @@ import {
   renderUniqueIdentifiersTSType,
 } from "./helpers/model"
 import { asString, renderObject } from "./helpers/render"
+import { VirtualSourceFile } from "./helpers/virtualSourceFile"
 import { lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
 
@@ -63,7 +64,7 @@ function getNameMappings(model: DMMF.Model) {
 }
 
 export function generateModel(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -80,7 +81,7 @@ export function generateModel(
 }
 
 function generateModelFields(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
@@ -107,7 +108,7 @@ function generateModelFields(
 }
 
 function generateWhere(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -164,7 +165,7 @@ function generateWhere(
 }
 
 function generateWhereListRelation(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -209,7 +210,7 @@ function generateWhereListRelation(
 }
 
 function generateOrderBy(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -266,7 +267,7 @@ function generateOrderBy(
 }
 
 function generateQueryOne(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
@@ -312,7 +313,7 @@ function generateQueryOne(
 }
 
 function generateQueryList(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -392,7 +393,7 @@ function generateQueryList(
 }
 
 function generateCreate(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -487,7 +488,7 @@ function generateCreate(
 }
 
 function generateUpdate(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   context: GeneratorContext
 ) {
@@ -608,7 +609,7 @@ function generateUpdate(
 }
 
 function generateDelete(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
@@ -654,7 +655,7 @@ function generateDelete(
 }
 
 function generateExport(
-  sourceFile: SourceFile,
+  sourceFile: VirtualSourceFile,
   model: DMMF.Model,
   _context: GeneratorContext
 ) {
