@@ -23,7 +23,7 @@ export function resolveUniqueIdentifiers(model: DMMF.Model): string[] {
 
   // Try finding 2
   if (model.primaryKey && model.primaryKey.fields.length > 0) {
-    return model.primaryKey.fields
+    return model.primaryKey.fields.slice()
   }
 
   // Try finding 3
@@ -35,7 +35,7 @@ export function resolveUniqueIdentifiers(model: DMMF.Model): string[] {
 
   // Try finding 4
   if (model.uniqueFields && model.uniqueFields.length > 0) {
-    return model.uniqueFields[0]
+    return model.uniqueFields[0].slice()
   }
 
   throw new Error(

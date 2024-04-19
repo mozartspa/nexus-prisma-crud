@@ -45,6 +45,16 @@ export const StringFilterInputType = inputObjectType({
   }
 })
   
+export const StringListFilterInputType = inputObjectType({
+  name: 'StringListFilterInput',
+  definition(t) {
+    t.list.string('equals')
+    t.field('every', { type: 'StringFilterInput' as any })
+    t.field('some', { type: 'StringFilterInput' as any })
+    t.field('none', { type: 'StringFilterInput' as any })
+  }
+})
+  
 export const IntFilterInputType = inputObjectType({
   name: 'IntFilterInput',
   definition(t) {
@@ -56,6 +66,16 @@ export const IntFilterInputType = inputObjectType({
     t.int('gt')
     t.int('gte')
     t.field('not', { type: 'IntFilterInput' as any })
+  }
+})
+  
+export const IntListFilterInputType = inputObjectType({
+  name: 'IntListFilterInput',
+  definition(t) {
+    t.list.int('equals')
+    t.field('every', { type: 'IntFilterInput' as any })
+    t.field('some', { type: 'IntFilterInput' as any })
+    t.field('none', { type: 'IntFilterInput' as any })
   }
 })
   
@@ -155,6 +175,10 @@ const UserModel = {
   bigint: {
     name: 'bigint',
     type: nullable('BigInt' as any)
+  },
+  strings: {
+    name: 'strings',
+    type: nonNull(list(nonNull('String' as any)))
   }
 }
   
@@ -183,6 +207,10 @@ const UserWhere = {
   bigint: {
     name: 'bigint',
     type: nullable('BigIntFilterInput' as any)
+  },
+  strings: {
+    name: 'strings',
+    type: nullable('StringListFilterInput' as any)
   },
   AND: {
     name: 'AND',
@@ -235,6 +263,10 @@ const UserOrderBy = {
   },
   bigint: {
     name: 'bigint',
+    type: 'SortDir'
+  },
+  strings: {
+    name: 'strings',
     type: 'SortDir'
   }
 }
@@ -293,6 +325,10 @@ const UserCreate = {
   bigint: {
     name: 'bigint',
     type: nullable('BigInt' as any)
+  },
+  strings: {
+    name: 'strings',
+    type: nonNull(list(nonNull('String' as any)))
   }
 }
   
@@ -335,6 +371,10 @@ const UserUpdate = {
   bigint: {
     name: 'bigint',
     type: nullable('BigInt' as any)
+  },
+  strings: {
+    name: 'strings',
+    type: list(nonNull('String' as any))
   }
 }
   
@@ -831,7 +871,9 @@ export const generatedTypes = {
   'SortDir': SortDirEnum,
   'IDFilterInput': IDFilterInputType,
   'StringFilterInput': StringFilterInputType,
+  'StringListFilterInput': StringListFilterInputType,
   'IntFilterInput': IntFilterInputType,
+  'IntListFilterInput': IntListFilterInputType,
   'FloatFilterInput': FloatFilterInputType,
   'BooleanFilterInput': BooleanFilterInputType,
   'DateTimeFilterInput': DateTimeFilterInputType,

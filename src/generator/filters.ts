@@ -98,6 +98,40 @@ export function generateFilters(
     ],
   })
 
+  context.addType("StringListFilterInput", "StringListFilterInputType")
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: "StringListFilterInputType",
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: 'StringListFilterInput',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(`t.list.string('equals')`)
+                writer.writeLine(
+                  `t.field('every', { type: 'StringFilterInput' as any })`
+                )
+                writer.writeLine(
+                  `t.field('some', { type: 'StringFilterInput' as any })`
+                )
+                writer.writeLine(
+                  `t.field('none', { type: 'StringFilterInput' as any })`
+                )
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
+
   context.addType("IntFilterInput", "IntFilterInputType")
   sourceFile.addVariableStatement({
     declarationKind: VariableDeclarationKind.Const,
@@ -122,6 +156,40 @@ export function generateFilters(
                 writer.writeLine(`t.int('gte')`)
                 writer.writeLine(
                   `t.field('not', { type: 'IntFilterInput' as any })`
+                )
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
+
+  context.addType("IntListFilterInput", "IntListFilterInputType")
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: "IntListFilterInputType",
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: 'IntListFilterInput',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(`t.list.int('equals')`)
+                writer.writeLine(
+                  `t.field('every', { type: 'IntFilterInput' as any })`
+                )
+                writer.writeLine(
+                  `t.field('some', { type: 'IntFilterInput' as any })`
+                )
+                writer.writeLine(
+                  `t.field('none', { type: 'IntFilterInput' as any })`
                 )
               })
             })

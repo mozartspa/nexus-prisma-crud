@@ -1,4 +1,4 @@
-import * as PrismaSDK from "@prisma/sdk"
+import * as PrismaSDK from "@prisma/internals"
 import * as fs from "fs-jetpack"
 import * as Path from "path"
 import { generateAndEmit } from "../../src/generator"
@@ -20,7 +20,6 @@ export async function generateModules(
   const dmmf = await PrismaSDK.getDMMF({
     datamodel: prismaDatamodel,
   })
-
   await generateAndEmit(dmmf, dirOut, prismaClientPath, true)
 
   async function readFile(file: string) {

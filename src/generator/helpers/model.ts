@@ -136,7 +136,6 @@ export function getFieldDefinitionsForModel(model: DMMF.Model) {
       const uniqueIdentifiers = resolveUniqueIdentifiers(model)
         .map((id) => asString(id))
         .join(", ")
-
       const resolve = `NPCLib.createRelationFieldResolver<${TRootModel}, ${TOutput}>(${modelName}, ${relFieldName}, [${uniqueIdentifiers}], runtimeContext)`
 
       type[field.name].resolve = resolve
@@ -243,7 +242,9 @@ export function getFieldDefinitionsForWhere(
         if (isScalarSupportedInWhere(graphqlType)) {
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asString(`${graphqlType}FilterInput`)} as any)`,
+            type: `nullable(${asString(
+              `${graphqlType}${field.isList ? "List" : ""}FilterInput`
+            )} as any)`,
           }
         }
         break

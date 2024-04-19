@@ -21,6 +21,10 @@ generatorHandler({
       throw new Error(`Missing @prisma/client generator.`)
     }
 
+    if (!outputPath) {
+      throw new Error(`Missing @prisma/client output.`)
+    }
+
     await generateAndEmit(dmmf, outputPath, prismaClientPath)
   },
 })

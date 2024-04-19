@@ -1,6 +1,11 @@
 import { generateModules } from "../__helpers__/generateModules"
 
 const modelsRelationsSchema = `
+  datasource db {
+    provider = "postgresql"
+    url      = "postgresql://fake:mypassword@localhost:5432/mydb?schema=public"
+  }
+
   model User {
     id       Int     @id @default(autoincrement())
     username String  @unique
@@ -8,6 +13,7 @@ const modelsRelationsSchema = `
     age      Int?
     amount   Decimal?
     bigint   BigInt?
+    strings  String[]
   }
   
   model Client {
