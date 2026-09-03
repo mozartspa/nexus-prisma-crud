@@ -334,4 +334,73 @@ export function generateFilters(
       },
     ],
   })
+
+  // Prisma exposes a different, list-shaped filter (equals/has/hasEvery/
+  // hasSome/isEmpty) for scalar list fields (e.g. `tags String[]`), distinct
+  // from the single-value filter above. Generate one per supported scalar.
+  generateListFilter(sourceFile, context, "String", "string")
+  generateListFilter(sourceFile, context, "Int", "int")
+  generateListFilter(sourceFile, context, "Float", "float")
+  generateListFilter(sourceFile, context, "Boolean", "boolean")
+  generateListFilter(sourceFile, context, "DateTime")
+  generateListFilter(sourceFile, context, "Decimal")
+  generateListFilter(sourceFile, context, "BigInt")
+}
+
+function generateListFilter(
+  sourceFile: SourceFile,
+  context: GeneratorContext,
+  graphqlType: string,
+  scalarMethod?: string
+) {
+  const typeName = `${graphqlType}ListFilterInput`
+  const typeObjectName = `${graphqlType}ListFilterInputType`
+
+  context.addType(typeName, typeObjectName)
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: typeObjectName,
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(`name: '${typeName}',`)
+              writer.write("definition(t)")
+              writer.block(() => {
+                if (scalarMethod) {
+                  writer.writeLine(`t.list.${scalarMethod}('equals')`)
+                  writer.writeLine(`t.${scalarMethod}('has')`)
+                  writer.writeLine(`t.list.${scalarMethod}('hasEvery')`)
+                  writer.writeLine(`t.list.${scalarMethod}('hasSome')`)
+                } else {
+                  writer.writeLine(
+                    `t.list.field('equals', { type: ${asType(graphqlType)} })`
+                  )
+                  writer.writeLine(
+                    `t.field('has', { type: ${asType(graphqlType)} })`
+                  )
+                  writer.writeLine(
+                    `t.list.field('hasEvery', { type: ${asType(
+                      graphqlType
+                    )} })`
+                  )
+                  writer.writeLine(
+                    `t.list.field('hasSome', { type: ${asType(
+                      graphqlType
+                    )} })`
+                  )
+                }
+                writer.writeLine(`t.boolean('isEmpty')`)
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
 }

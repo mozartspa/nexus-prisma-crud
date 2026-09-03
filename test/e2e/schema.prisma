@@ -24,6 +24,8 @@ model User {
   blob      Bytes?
   active    Boolean  @default(true)
   role      Role     @default(USER)
+  roles     Role[]
+  tags      String[]
   createdAt DateTime @default(now())
   clients   Client[]
 }

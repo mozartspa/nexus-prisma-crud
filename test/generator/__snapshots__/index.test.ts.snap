@@ -123,6 +123,83 @@ export const BigIntFilterInputType = inputObjectType({
   }
 })
   
+export const StringListFilterInputType = inputObjectType({
+  name: 'StringListFilterInput',
+  definition(t) {
+    t.list.string('equals')
+    t.string('has')
+    t.list.string('hasEvery')
+    t.list.string('hasSome')
+    t.boolean('isEmpty')
+  }
+})
+  
+export const IntListFilterInputType = inputObjectType({
+  name: 'IntListFilterInput',
+  definition(t) {
+    t.list.int('equals')
+    t.int('has')
+    t.list.int('hasEvery')
+    t.list.int('hasSome')
+    t.boolean('isEmpty')
+  }
+})
+  
+export const FloatListFilterInputType = inputObjectType({
+  name: 'FloatListFilterInput',
+  definition(t) {
+    t.list.float('equals')
+    t.float('has')
+    t.list.float('hasEvery')
+    t.list.float('hasSome')
+    t.boolean('isEmpty')
+  }
+})
+  
+export const BooleanListFilterInputType = inputObjectType({
+  name: 'BooleanListFilterInput',
+  definition(t) {
+    t.list.boolean('equals')
+    t.boolean('has')
+    t.list.boolean('hasEvery')
+    t.list.boolean('hasSome')
+    t.boolean('isEmpty')
+  }
+})
+  
+export const DateTimeListFilterInputType = inputObjectType({
+  name: 'DateTimeListFilterInput',
+  definition(t) {
+    t.list.field('equals', { type: 'DateTime' as any })
+    t.field('has', { type: 'DateTime' as any })
+    t.list.field('hasEvery', { type: 'DateTime' as any })
+    t.list.field('hasSome', { type: 'DateTime' as any })
+    t.boolean('isEmpty')
+  }
+})
+  
+export const DecimalListFilterInputType = inputObjectType({
+  name: 'DecimalListFilterInput',
+  definition(t) {
+    t.list.field('equals', { type: 'Decimal' as any })
+    t.field('has', { type: 'Decimal' as any })
+    t.list.field('hasEvery', { type: 'Decimal' as any })
+    t.list.field('hasSome', { type: 'Decimal' as any })
+    t.boolean('isEmpty')
+  }
+})
+  
+export const BigIntListFilterInputType = inputObjectType({
+  name: 'BigIntListFilterInput',
+  definition(t) {
+    t.list.field('equals', { type: 'BigInt' as any })
+    t.field('has', { type: 'BigInt' as any })
+    t.list.field('hasEvery', { type: 'BigInt' as any })
+    t.list.field('hasSome', { type: 'BigInt' as any })
+    t.boolean('isEmpty')
+  }
+})
+  
 export const RelatedCountOrderByInputType = inputObjectType({
   name: 'RelatedCountOrderByInput',
   definition(t) {
@@ -144,6 +221,17 @@ export const RoleEnumFilterInputType = inputObjectType({
     t.nullable.field('equals', { type: 'Role' as any })
     t.nullable.list.field('in', { type: 'Role' as any })
     t.nullable.list.field('notIn', { type: 'Role' as any })
+  }
+})
+  
+export const RoleEnumListFilterInputType = inputObjectType({
+  name: 'RoleEnumListFilterInput',
+  definition(t) {
+    t.nullable.list.field('equals', { type: 'Role' as any })
+    t.nullable.field('has', { type: 'Role' as any })
+    t.nullable.list.field('hasEvery', { type: 'Role' as any })
+    t.nullable.list.field('hasSome', { type: 'Role' as any })
+    t.boolean('isEmpty')
   }
 })
   
@@ -922,9 +1010,17 @@ export const generatedTypes = {
   'DateTimeFilterInput': DateTimeFilterInputType,
   'DecimalFilterInput': DecimalFilterInputType,
   'BigIntFilterInput': BigIntFilterInputType,
+  'StringListFilterInput': StringListFilterInputType,
+  'IntListFilterInput': IntListFilterInputType,
+  'FloatListFilterInput': FloatListFilterInputType,
+  'BooleanListFilterInput': BooleanListFilterInputType,
+  'DateTimeListFilterInput': DateTimeListFilterInputType,
+  'DecimalListFilterInput': DecimalListFilterInputType,
+  'BigIntListFilterInput': BigIntListFilterInputType,
   'RelatedCountOrderByInput': RelatedCountOrderByInputType,
   'Role': RoleEnum,
   'RoleEnumFilterInput': RoleEnumFilterInputType,
+  'RoleEnumListFilterInput': RoleEnumListFilterInputType,
   'UserWhereInput': UserWhereInputType,
   'UserListRelationWhereInput': UserListRelationWhereInputType,
   'UserOrderByInput': UserOrderByInputType,

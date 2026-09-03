@@ -241,18 +241,24 @@ export function getFieldDefinitionsForWhere(
       case "scalar": {
         const graphqlType = fieldTypeToGraphQLType(field)
         if (isScalarSupportedInWhere(graphqlType)) {
+          const filterInputName = field.isList
+            ? `${graphqlType}ListFilterInput`
+            : `${graphqlType}FilterInput`
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asType(`${graphqlType}FilterInput`)})`,
+            type: `nullable(${asType(filterInputName)})`,
           }
         }
         break
       }
 
       case "enum": {
+        const filterInputName = field.isList
+          ? `${field.type}EnumListFilterInput`
+          : `${field.type}EnumFilterInput`
         type[field.name] = {
           name: asString(field.name),
-          type: `nullable(${asType(`${field.type}EnumFilterInput`)})`,
+          type: `nullable(${asType(filterInputName)})`,
         }
         break
       }

@@ -78,4 +78,57 @@ export function generateEnum(
       },
     ],
   })
+
+  // Enum list filter, for enum-typed scalar list fields (e.g. `roles Role[]`),
+  // which Prisma exposes through a different, list-shaped filter than the
+  // single-value one above.
+  context.addType(
+    `${modelEnum.name}EnumListFilterInput`,
+    `${modelEnum.name}EnumListFilterInputType`
+  )
+  sourceFile.addVariableStatement({
+    declarationKind: VariableDeclarationKind.Const,
+    isExported: true,
+    declarations: [
+      {
+        name: `${modelEnum.name}EnumListFilterInputType`,
+        initializer(writer) {
+          writer
+            .write("inputObjectType(")
+            .indent(1)
+            .inlineBlock(() => {
+              writer.writeLine(
+                `name: '${`${modelEnum.name}EnumListFilterInput`}',`
+              )
+              writer.write("definition(t)")
+              writer.block(() => {
+                writer.writeLine(
+                  `t.nullable.list.field('equals', { type: ${asType(
+                    modelEnum.name
+                  )} })`
+                )
+                writer.writeLine(
+                  `t.nullable.field('has', { type: ${asType(
+                    modelEnum.name
+                  )} })`
+                )
+                writer.writeLine(
+                  `t.nullable.list.field('hasEvery', { type: ${asType(
+                    modelEnum.name
+                  )} })`
+                )
+                writer.writeLine(
+                  `t.nullable.list.field('hasSome', { type: ${asType(
+                    modelEnum.name
+                  )} })`
+                )
+                writer.writeLine(`t.boolean('isEmpty')`)
+              })
+            })
+            .write(")")
+            .newLine()
+        },
+      },
+    ],
+  })
 }
