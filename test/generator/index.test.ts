@@ -1,13 +1,22 @@
 import { generateModules } from "../__helpers__/generateModules"
 
 const modelsRelationsSchema = `
+  enum Role {
+    USER
+    ADMIN
+  }
+
   model User {
     id       Int     @id @default(autoincrement())
     username String  @unique
-    name     String? 
+    name     String?
     age      Int?
     amount   Decimal?
     bigint   BigInt?
+    active   Boolean  @default(true)
+    data     Json?
+    blob     Bytes?
+    role     Role     @default(USER)
   }
   
   model Client {

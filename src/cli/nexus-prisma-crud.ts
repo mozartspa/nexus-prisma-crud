@@ -12,7 +12,14 @@ generatorHandler({
   },
   async onGenerate(options) {
     const dmmf = options.dmmf
-    const outputPath = options.generator.output!.value
+    const outputPath = options.generator.output?.value
+
+    if (!outputPath) {
+      throw new Error(
+        `Missing "output" option for the "nexus-prisma-crud" generator.`
+      )
+    }
+
     const prismaClientPath = options.otherGenerators.find(
       (o) => o.name === "client"
     )?.output?.value
