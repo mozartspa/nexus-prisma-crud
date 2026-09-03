@@ -13,7 +13,7 @@ import { RecordUnknown } from "../types"
  *          3. Exactly one field with a `@unique` annotation (if multiple, use first).
  *          4. Multiple fields with a `@@unique` clause.
  */
-export function resolveUniqueIdentifiers(model: DMMF.Model): string[] {
+export function resolveUniqueIdentifiers(model: DMMF.Model): readonly string[] {
   // Try finding 1
   const singleIdField = model.fields.find((f) => f.isId)
 

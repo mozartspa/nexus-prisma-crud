@@ -2,6 +2,7 @@ import { blocks, core, inputObjectType, nonNull, nullable } from "nexus"
 import {
   IncludeConfig,
   InputDefinition,
+  InputDefinitionField,
   InputDefinitionFieldSelector,
 } from "./types"
 
@@ -58,7 +59,9 @@ export function createInputTypeBuilder<T, TDefaultIncluded extends string>(
       definition(t) {
         for (const key in inputDef) {
           if (shouldAddKey(key)) {
-            const field = inputDef[key as keyof typeof inputDef]
+            const field = inputDef[key as keyof typeof inputDef] as
+              | InputDefinitionField
+              | string
             if (typeof field !== "string" && field.type) {
               const includeConfig = getIncludeConfig(key)
               if (includeConfig === "optional") {
