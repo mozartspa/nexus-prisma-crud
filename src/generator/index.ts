@@ -31,26 +31,29 @@ function getRelativePrismaClientPath(
 export async function generateAndEmit(
   dmmf: DMMF.Document,
   outputPath: string,
-  prismaClientPath: string,
-  includeSources = false
+  prismaClientPath: string
 ) {
   const relativePrismaClientPath = getRelativePrismaClientPath(
     outputPath,
     prismaClientPath
   )
 
+  // Only TypeScript source is generated: the consuming project's own
+  // TypeScript compiler is the one that resolves the resolvers' types
+  // against the Prisma Client it generated (e.g. `PrismaLib.User`).
+  //
+  // Pre-compiling to .js/.d.ts here used to be done for the sake of plain
+  // JavaScript consumers, but it requires ts-morph to *print* those complex,
+  // generic Prisma Client types back out as text. Recent Prisma Client
+  // versions build their model types out of nested conditional/mapped types
+  // (`$Result.GetResult<...>`) that TypeScript cannot always print back as a
+  // named reference; when it can't, it falls back to inlining an expanded
+  // structural type, and that expansion has been observed to silently drop
+  // the nullability of scalar fields. Handing the .ts source to the
+  // consumer's own compiler avoids that print/re-parse round-trip entirely,
+  // since the type is never serialized to text in the first place.
   const project = new Project({
     skipAddingFilesFromTsConfig: true,
-    compilerOptions: {
-      declaration: true,
-      sourceMap: false,
-      skipLibCheck: true,
-      skipDefaultLibCheck: true,
-      types: [relativePrismaClientPath],
-      paths: {
-        "nexus-prisma-crud": [path.join(__dirname, "..", "..")],
-      },
-    },
   })
 
   const context = createGeneratorContext()
@@ -110,12 +113,6 @@ export async function generateAndEmit(
   })
 
   await project.save()
-  await project.emit()
-
-  // Remove source files if they should not be included
-  if (!includeSources) {
-    project.getSourceFiles().forEach((file) => file.deleteImmediatelySync())
-  }
 }
 
 function createGeneratorContext() {

@@ -4,8 +4,6 @@ import * as Path from "path"
 import { generateAndEmit } from "../../src/generator"
 
 export type GenerateModulesOutput = {
-  js: string
-  tsDeclaration: string
   tsSource: string
 }
 
@@ -32,21 +30,14 @@ export async function generateModules(
     datamodel: datasource + prismaDatamodel,
   })
 
-  await generateAndEmit(dmmf, dirOut, prismaClientPath, true)
+  await generateAndEmit(dmmf, dirOut, prismaClientPath)
 
-  async function readFile(file: string) {
-    return (await fs.readAsync(Path.posix.join(dirOut, file))) || ""
-  }
-
-  const js = await readFile("./index.js")
-  const tsDeclaration = await readFile("./index.d.ts")
-  const tsSource = await readFile("./index.ts")
+  const tsSource =
+    (await fs.readAsync(Path.posix.join(dirOut, "./index.ts"))) || ""
 
   fs.remove(dir)
 
   return {
-    js,
-    tsDeclaration,
     tsSource,
   }
 }
