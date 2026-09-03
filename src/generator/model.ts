@@ -339,7 +339,7 @@ function generateQueryList(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.nonNull.list.field('items', { type: nonNull('${model.name}') })`
+                  `t.nonNull.list.field('items', { type: nonNull('${model.name}' as any) })`
                 )
                 writer.writeLine(`t.nonNull.int('total')`)
               })

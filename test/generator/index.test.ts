@@ -40,3 +40,17 @@ it("can generate module with models and relations", async () => {
 
   expect(tsSource).toMatchSnapshot()
 })
+
+it("always casts generated type names passed to nonNull()/nullable() as any", async () => {
+  const { tsSource } = await generateModules(modelsRelationsSchema)
+
+  // Every Prisma-model-derived type name handed to nexus' `nonNull`/`nullable`
+  // helpers must be cast `as any`, since it is a dynamically generated name
+  // that Nexus' own typegen union (`NexusNonNullableTypes`) has no way of
+  // knowing about ahead of time. Without the cast, TypeScript only accepts
+  // it by coincidence, when the same name happens to already be referenced
+  // elsewhere in the consumer's own GraphQL schema.
+  const uncastOccurrences = tsSource.match(/(?:nonNull|nullable)\('[^']+'\)/g)
+
+  expect(uncastOccurrences).toBeNull()
+})

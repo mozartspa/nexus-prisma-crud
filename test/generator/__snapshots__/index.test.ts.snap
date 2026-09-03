@@ -312,7 +312,7 @@ const userQueryOneField = NPCLib.createQueryOneFieldBuilder({
 export const UserListType = objectType({
   name: 'UserList',
   definition(t) {
-    t.nonNull.list.field('items', { type: nonNull('User') })
+    t.nonNull.list.field('items', { type: nonNull('User' as any) })
     t.nonNull.int('total')
   }
 })
@@ -574,7 +574,7 @@ const clientQueryOneField = NPCLib.createQueryOneFieldBuilder({
 export const ClientListType = objectType({
   name: 'ClientList',
   definition(t) {
-    t.nonNull.list.field('items', { type: nonNull('Client') })
+    t.nonNull.list.field('items', { type: nonNull('Client' as any) })
     t.nonNull.int('total')
   }
 })
@@ -792,7 +792,7 @@ const contactQueryOneField = NPCLib.createQueryOneFieldBuilder({
 export const ContactListType = objectType({
   name: 'ContactList',
   definition(t) {
-    t.nonNull.list.field('items', { type: nonNull('Contact') })
+    t.nonNull.list.field('items', { type: nonNull('Contact' as any) })
     t.nonNull.int('total')
   }
 })
