@@ -1,4 +1,5 @@
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { asType } from "./helpers/render"
 import { GeneratorContext } from "./types"
 
 export function generateFilters(
@@ -50,7 +51,7 @@ export function generateFilters(
                 writer.writeLine(`t.id('gt')`)
                 writer.writeLine(`t.id('gte')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'IDFilterInput' as any })`
+                  `t.field('not', { type: ${asType("IDFilterInput")} })`
                 )
               })
             })
@@ -87,7 +88,7 @@ export function generateFilters(
                 writer.writeLine(`t.string('gt')`)
                 writer.writeLine(`t.string('gte')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'StringFilterInput' as any })`
+                  `t.field('not', { type: ${asType("StringFilterInput")} })`
                 )
               })
             })
@@ -121,7 +122,7 @@ export function generateFilters(
                 writer.writeLine(`t.int('gt')`)
                 writer.writeLine(`t.int('gte')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'IntFilterInput' as any })`
+                  `t.field('not', { type: ${asType("IntFilterInput")} })`
                 )
               })
             })
@@ -155,7 +156,7 @@ export function generateFilters(
                 writer.writeLine(`t.float('gt')`)
                 writer.writeLine(`t.float('gte')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'FloatFilterInput' as any })`
+                  `t.field('not', { type: ${asType("FloatFilterInput")} })`
                 )
               })
             })
@@ -183,7 +184,7 @@ export function generateFilters(
               writer.block(() => {
                 writer.writeLine(`t.boolean('equals')`)
                 writer.writeLine(
-                  `t.field('not', { type: 'BooleanFilterInput' as any })`
+                  `t.field('not', { type: ${asType("BooleanFilterInput")} })`
                 )
               })
             })
@@ -210,20 +211,28 @@ export function generateFilters(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.field('equals', { type: 'DateTime' as any })`
+                  `t.field('equals', { type: ${asType("DateTime")} })`
                 )
                 writer.writeLine(
-                  `t.list.field('in', { type: 'DateTime' as any })`
+                  `t.list.field('in', { type: ${asType("DateTime")} })`
                 )
                 writer.writeLine(
-                  `t.list.field('notIn', { type: 'DateTime' as any })`
+                  `t.list.field('notIn', { type: ${asType("DateTime")} })`
                 )
-                writer.writeLine(`t.field('lt', { type: 'DateTime' as any })`)
-                writer.writeLine(`t.field('lte', { type: 'DateTime' as any })`)
-                writer.writeLine(`t.field('gt', { type: 'DateTime' as any })`)
-                writer.writeLine(`t.field('gte', { type: 'DateTime' as any })`)
                 writer.writeLine(
-                  `t.field('not', { type: 'DateTimeFilterInput' as any })`
+                  `t.field('lt', { type: ${asType("DateTime")} })`
+                )
+                writer.writeLine(
+                  `t.field('lte', { type: ${asType("DateTime")} })`
+                )
+                writer.writeLine(
+                  `t.field('gt', { type: ${asType("DateTime")} })`
+                )
+                writer.writeLine(
+                  `t.field('gte', { type: ${asType("DateTime")} })`
+                )
+                writer.writeLine(
+                  `t.field('not', { type: ${asType("DateTimeFilterInput")} })`
                 )
               })
             })
@@ -250,20 +259,28 @@ export function generateFilters(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.field('equals', { type: 'Decimal' as any })`
+                  `t.field('equals', { type: ${asType("Decimal")} })`
                 )
                 writer.writeLine(
-                  `t.list.field('in', { type: 'Decimal' as any })`
+                  `t.list.field('in', { type: ${asType("Decimal")} })`
                 )
                 writer.writeLine(
-                  `t.list.field('notIn', { type: 'Decimal' as any })`
+                  `t.list.field('notIn', { type: ${asType("Decimal")} })`
                 )
-                writer.writeLine(`t.field('lt', { type: 'Decimal' as any })`)
-                writer.writeLine(`t.field('lte', { type: 'Decimal' as any })`)
-                writer.writeLine(`t.field('gt', { type: 'Decimal' as any })`)
-                writer.writeLine(`t.field('gte', { type: 'Decimal' as any })`)
                 writer.writeLine(
-                  `t.field('not', { type: 'DecimalFilterInput' as any })`
+                  `t.field('lt', { type: ${asType("Decimal")} })`
+                )
+                writer.writeLine(
+                  `t.field('lte', { type: ${asType("Decimal")} })`
+                )
+                writer.writeLine(
+                  `t.field('gt', { type: ${asType("Decimal")} })`
+                )
+                writer.writeLine(
+                  `t.field('gte', { type: ${asType("Decimal")} })`
+                )
+                writer.writeLine(
+                  `t.field('not', { type: ${asType("DecimalFilterInput")} })`
                 )
               })
             })
@@ -289,19 +306,25 @@ export function generateFilters(
               writer.writeLine(`name: 'BigIntFilterInput',`)
               writer.write("definition(t)")
               writer.block(() => {
-                writer.writeLine(`t.field('equals', { type: 'BigInt' as any })`)
                 writer.writeLine(
-                  `t.list.field('in', { type: 'BigInt' as any })`
+                  `t.field('equals', { type: ${asType("BigInt")} })`
                 )
                 writer.writeLine(
-                  `t.list.field('notIn', { type: 'BigInt' as any })`
+                  `t.list.field('in', { type: ${asType("BigInt")} })`
                 )
-                writer.writeLine(`t.field('lt', { type: 'BigInt' as any })`)
-                writer.writeLine(`t.field('lte', { type: 'BigInt' as any })`)
-                writer.writeLine(`t.field('gt', { type: 'BigInt' as any })`)
-                writer.writeLine(`t.field('gte', { type: 'BigInt' as any })`)
                 writer.writeLine(
-                  `t.field('not', { type: 'BigIntFilterInput' as any })`
+                  `t.list.field('notIn', { type: ${asType("BigInt")} })`
+                )
+                writer.writeLine(`t.field('lt', { type: ${asType("BigInt")} })`)
+                writer.writeLine(
+                  `t.field('lte', { type: ${asType("BigInt")} })`
+                )
+                writer.writeLine(`t.field('gt', { type: ${asType("BigInt")} })`)
+                writer.writeLine(
+                  `t.field('gte', { type: ${asType("BigInt")} })`
+                )
+                writer.writeLine(
+                  `t.field('not', { type: ${asType("BigIntFilterInput")} })`
                 )
               })
             })

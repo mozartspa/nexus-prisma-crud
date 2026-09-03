@@ -5,7 +5,7 @@ import {
 } from "./constraints"
 import { StandardGraphQLScalarTypes } from "./graphql"
 import { isAutoincrement, PrismaScalarType } from "./prisma"
-import { asString, renderObject } from "./render"
+import { asString, asType, renderObject } from "./render"
 
 function allCasesHandled(x: never): never {
   throw new Error(`All cases were not handled:\n${x}`)
@@ -45,14 +45,14 @@ export function renderFieldAsArg(field: DMMF.Field): string {
 
   if (field.isList) {
     if (field.isRequired) {
-      return `nonNull(list(nonNull(arg({ type: '${graphqlType}' as any }))))`
+      return `nonNull(list(nonNull(arg({ type: ${asType(graphqlType)} }))))`
     } else {
-      return `list(nonNull(arg({ type: '${graphqlType}' as any })))`
+      return `list(nonNull(arg({ type: ${asType(graphqlType)} })))`
     }
   } else if (field.isRequired) {
-    return `nonNull(arg({ type: '${graphqlType}' as any }))`
+    return `nonNull(arg({ type: ${asType(graphqlType)} }))`
   } else {
-    return `nullable(arg({ type: '${graphqlType}' as any }))`
+    return `nullable(arg({ type: ${asType(graphqlType)} }))`
   }
 }
 
@@ -68,14 +68,14 @@ export function renderFieldAsNexusType(
 
   if (field.isList) {
     if (isRequired) {
-      return `nonNull(list(nonNull('${graphqlType}' as any)))`
+      return `nonNull(list(nonNull(${asType(graphqlType)})))`
     } else {
-      return `list(nonNull('${graphqlType}' as any))`
+      return `list(nonNull(${asType(graphqlType)}))`
     }
   } else if (isRequired) {
-    return `nonNull('${graphqlType}' as any)`
+    return `nonNull(${asType(graphqlType)})`
   } else {
-    return `nullable('${graphqlType}' as any)`
+    return `nullable(${asType(graphqlType)})`
   }
 }
 
@@ -243,7 +243,7 @@ export function getFieldDefinitionsForWhere(
         if (isScalarSupportedInWhere(graphqlType)) {
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asString(`${graphqlType}FilterInput`)} as any)`,
+            type: `nullable(${asType(`${graphqlType}FilterInput`)})`,
           }
         }
         break
@@ -252,7 +252,7 @@ export function getFieldDefinitionsForWhere(
       case "enum": {
         type[field.name] = {
           name: asString(field.name),
-          type: `nullable(${asString(`${field.type}EnumFilterInput`)} as any)`,
+          type: `nullable(${asType(`${field.type}EnumFilterInput`)})`,
         }
         break
       }
@@ -263,16 +263,14 @@ export function getFieldDefinitionsForWhere(
           // TODO: type name is hardcoded, should depend on name mapping
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asString(
-              `${field.type}ListRelationWhereInput`
-            )} as any)`,
+            type: `nullable(${asType(`${field.type}ListRelationWhereInput`)})`,
           }
         } else {
           // Many-to-One or One-to-One
           // TODO: type name is hardcoded, should depend on name mapping
           type[field.name] = {
             name: asString(field.name),
-            type: `nullable(${asString(`${field.type}WhereInput`)} as any)`,
+            type: `nullable(${asType(`${field.type}WhereInput`)})`,
           }
         }
         break
@@ -282,17 +280,17 @@ export function getFieldDefinitionsForWhere(
 
   type["AND"] = {
     name: asString("AND"),
-    type: `nullable(list('${inputTypeName}' as any))`,
+    type: `nullable(list(${asType(inputTypeName)}))`,
   }
 
   type["OR"] = {
     name: asString("OR"),
-    type: `nullable(list('${inputTypeName}' as any))`,
+    type: `nullable(list(${asType(inputTypeName)}))`,
   }
 
   type["NOT"] = {
     name: asString("NOT"),
-    type: `nullable(list('${inputTypeName}' as any))`,
+    type: `nullable(list(${asType(inputTypeName)}))`,
   }
 
   return type

@@ -1,6 +1,6 @@
 import { DMMF } from "@prisma/generator-helper"
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
-import { asString, renderObject } from "./helpers/render"
+import { asString, asType, renderObject } from "./helpers/render"
 import { GeneratorContext } from "./types"
 
 export function generateEnum(
@@ -56,13 +56,19 @@ export function generateEnum(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.nullable.field('equals', { type: '${modelEnum.name}' as any })`
+                  `t.nullable.field('equals', { type: ${asType(
+                    modelEnum.name
+                  )} })`
                 )
                 writer.writeLine(
-                  `t.nullable.list.field('in', { type: '${modelEnum.name}' as any })`
+                  `t.nullable.list.field('in', { type: ${asType(
+                    modelEnum.name
+                  )} })`
                 )
                 writer.writeLine(
-                  `t.nullable.list.field('notIn', { type: '${modelEnum.name}' as any })`
+                  `t.nullable.list.field('notIn', { type: ${asType(
+                    modelEnum.name
+                  )} })`
                 )
               })
             })

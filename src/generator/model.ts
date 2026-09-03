@@ -10,7 +10,7 @@ import {
   renderUniqueIdentifiersAsArgs,
   renderUniqueIdentifiersTSType,
 } from "./helpers/model"
-import { asString, renderObject } from "./helpers/render"
+import { asString, asType, renderObject } from "./helpers/render"
 import { VirtualSourceFile } from "./helpers/virtualSourceFile"
 import { lowerFirst } from "./runtime/helpers"
 import { GeneratorContext } from "./types"
@@ -191,13 +191,13 @@ function generateWhereListRelation(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.field('every', { type: '${whereInputType}' as any })`
+                  `t.field('every', { type: ${asType(whereInputType)} })`
                 )
                 writer.writeLine(
-                  `t.field('some', { type: '${whereInputType}' as any })`
+                  `t.field('some', { type: ${asType(whereInputType)} })`
                 )
                 writer.writeLine(
-                  `t.field('none', { type: '${whereInputType}' as any })`
+                  `t.field('none', { type: ${asType(whereInputType)} })`
                 )
               })
             })
@@ -339,7 +339,9 @@ function generateQueryList(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.nonNull.list.field('items', { type: nonNull('${model.name}' as any) })`
+                  `t.nonNull.list.field('items', { type: nonNull(${asType(
+                    model.name
+                  )}) })`
                 )
                 writer.writeLine(`t.nonNull.int('total')`)
               })

@@ -1,4 +1,5 @@
 import { SourceFile, VariableDeclarationKind } from "ts-morph"
+import { asType } from "./helpers/render"
 import { GeneratorContext } from "./types"
 
 export function generateModelCommon(
@@ -21,7 +22,7 @@ export function generateModelCommon(
               writer.write("definition(t)")
               writer.block(() => {
                 writer.writeLine(
-                  `t.field('_count', { type: 'SortDir' as any })`
+                  `t.field('_count', { type: ${asType("SortDir")} })`
                 )
               })
             })
