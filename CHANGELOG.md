@@ -2,6 +2,23 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.4 - 2026-09-03
+
+### Fixed
+
+- The generated `WhereInput` used the single-value scalar/enum filter
+  (`equals`/`lt`/`lte`/`gt`/`gte`/`in`/`notIn`/`not`) for **list** scalar
+  and enum fields too (e.g. `tags String[]`, `roles Role[]`), instead of
+  the structurally different, list-shaped filter Prisma actually generates
+  for them (`equals: T[]`, `has: T`, `hasEvery: T[]`, `hasSome: T[]`,
+  `isEmpty: boolean`). This produced a deeply nested `TS2345` on the
+  affected field's `equals` wherever `queryListResolver` was called — and
+  since every model's `WhereInput` embeds every related model's own
+  `WhereInput`, a single list field on a widely-referenced model (e.g.
+  `User`) could surface as compile errors scattered across many unrelated
+  files. Added `<Type>ListFilterInput`/`<Enum>EnumListFilterInput` input
+  types and use them for list fields instead.
+
 ## 1.0.3 - 2026-09-03
 
 ### Changed
