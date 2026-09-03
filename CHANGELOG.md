@@ -2,6 +2,22 @@
 
 All notable changes to this project are documented in this file.
 
+## 1.0.3 - 2026-09-03
+
+### Changed
+
+- Centralized the `as any` cast every generated Nexus type-name reference
+  needs (see 1.0.2) into a single `asType()` helper, instead of writing it
+  out inline at each of the ~30 call sites, so a future one can't forget it
+  the way the fixed one did. Purely internal — generated output is
+  unchanged.
+
+### Added
+
+- A real README: setup instructions, what's generated per model, and how
+  to customize generated input types and operations. Every code sample is
+  verified against a real generated Prisma 6 client by a new e2e test.
+
 ## 1.0.2 - 2026-09-03
 
 ### Fixed
