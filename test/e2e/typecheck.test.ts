@@ -4,6 +4,7 @@ import * as fs from "fs-jetpack"
 import * as Path from "path"
 import * as ts from "typescript"
 import { generateAndEmit } from "../../src/generator"
+import { toInstalledPrismaSyntax } from "../__helpers__/prismaSchemaCompat"
 
 /**
  * This test exercises the whole pipeline against a *real* Prisma Client,
@@ -22,11 +23,13 @@ import { generateAndEmit } from "../../src/generator"
 it("generates code that type-checks against a real, generated Prisma Client", async () => {
   const rootDir = Path.join(__dirname, "..", "..")
   const schemaPath = Path.join(__dirname, "schema.prisma")
-  const schema = await fs.readAsync(schemaPath)
+  const rawSchema = await fs.readAsync(schemaPath)
 
-  if (!schema) {
+  if (!rawSchema) {
     throw new Error(`Unable to read fixture schema at "${schemaPath}".`)
   }
+
+  const schema = toInstalledPrismaSyntax(rawSchema)
 
   // Generated inside the repo (rather than the OS temp dir) so that Node
   // module resolution walking up from the fixture finds this repo's

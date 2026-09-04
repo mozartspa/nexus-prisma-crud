@@ -1,4 +1,5 @@
 import { DMMF } from "@prisma/generator-helper"
+import fs from "fs"
 import path from "path"
 import { Project, StructureKind } from "ts-morph"
 import { SemicolonPreference } from "typescript"
@@ -17,15 +18,30 @@ function getRelativePrismaClientPath(
 ) {
   let relativePath = path.relative(outputPath, prismaClientPath)
 
-  // Replace `@prisma/client` with `.prisma/client/index` in order to target a specific file
-  // instead of a package, otherwise when there are multiple packages of `prisma` in the same
-  // project some build issues may arise (TS thinks that the packages with same name has same content).
-  relativePath = relativePath.replace(
-    "/@prisma/client",
-    "/.prisma/client/index"
-  )
+  if (relativePath.includes("/@prisma/client")) {
+    // Replace `@prisma/client` with `.prisma/client/index` in order to target a specific file
+    // instead of a package, otherwise when there are multiple packages of `prisma` in the same
+    // project some build issues may arise (TS thinks that the packages with same name has same content).
+    relativePath = relativePath.replace(
+      "/@prisma/client",
+      "/.prisma/client/index"
+    )
+  } else if (
+    !hasEntryPoint(prismaClientPath, ["index.ts", "index.d.ts", "index.js"]) &&
+    hasEntryPoint(prismaClientPath, ["client.ts", "client.d.ts"])
+  ) {
+    // Prisma 7's `prisma-client` generator (unlike the legacy `prisma-client-js`)
+    // always requires a custom `output` and emits its main entry point as
+    // `client.ts` directly inside that directory, with no `index` file for
+    // Node/TS to resolve implicitly, so point at it explicitly.
+    relativePath += "/client"
+  }
 
   return relativePath
+}
+
+function hasEntryPoint(dir: string, fileNames: string[]) {
+  return fileNames.some((fileName) => fs.existsSync(path.join(dir, fileName)))
 }
 
 export async function generateAndEmit(

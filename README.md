@@ -6,7 +6,8 @@ It generates plain TypeScript source (no compilation step), which your own proje
 
 ## Requirements
 
-- Prisma 6 (`prisma` and `@prisma/client`)
+- Prisma 6 or 7 (`prisma` and `@prisma/client`) — note that Prisma 7 itself
+  requires Node `^20.19 || ^22.12 || >=24.0`
 - TypeScript ≥ 5.1 (required by Prisma 6's generated client types)
 - Node ≥ 18.18
 - `nexus` ^1.1.0

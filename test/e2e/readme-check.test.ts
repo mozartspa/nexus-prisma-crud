@@ -4,12 +4,15 @@ import * as fs from "fs-jetpack"
 import * as Path from "path"
 import * as ts from "typescript"
 import { generateAndEmit } from "../../src/generator"
+import { toInstalledPrismaSyntax } from "../__helpers__/prismaSchemaCompat"
 
 it("README usage examples type-check against a real, generated Prisma Client", async () => {
   const rootDir = Path.join(__dirname, "..", "..")
   const schemaPath = Path.join(__dirname, "schema.prisma")
-  const schema = await fs.readAsync(schemaPath)
-  if (!schema) throw new Error("no schema")
+  const rawSchema = await fs.readAsync(schemaPath)
+  if (!rawSchema) throw new Error("no schema")
+
+  const schema = toInstalledPrismaSyntax(rawSchema)
 
   const dir = Path.join(
     rootDir,

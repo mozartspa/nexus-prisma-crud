@@ -4,6 +4,7 @@ import * as fs from "fs-jetpack"
 import * as Path from "path"
 import * as ts from "typescript"
 import { generateAndEmit } from "../../src/generator"
+import { toInstalledPrismaSyntax } from "../__helpers__/prismaSchemaCompat"
 
 /**
  * `typecheck.test.ts` and `readme-check.test.ts` type-check a consumer
@@ -29,11 +30,13 @@ import { generateAndEmit } from "../../src/generator"
 it("queryListResolver's args stay assignable once real Nexus typegen is involved", async () => {
   const rootDir = Path.join(__dirname, "..", "..")
   const schemaPath = Path.join(__dirname, "schema.prisma")
-  const schema = await fs.readAsync(schemaPath)
+  const rawSchema = await fs.readAsync(schemaPath)
 
-  if (!schema) {
+  if (!rawSchema) {
     throw new Error(`Unable to read fixture schema at "${schemaPath}".`)
   }
+
+  const schema = toInstalledPrismaSyntax(rawSchema)
 
   const dir = Path.join(
     rootDir,
